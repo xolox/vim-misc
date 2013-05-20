@@ -4,7 +4,7 @@
 " Last Change: May 20, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
-let g:xolox#misc#os#version = '0.4'
+let g:xolox#misc#os#version = '0.5'
 
 function! xolox#misc#os#is_win() " {{{1
   " Returns 1 (true) when on Microsoft Windows, 0 (false) otherwise.

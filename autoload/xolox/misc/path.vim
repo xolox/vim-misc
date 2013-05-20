@@ -1,10 +1,10 @@
 " Pathname manipulation functions.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: May 19, 2013
+" Last Change: May 20, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
-let s:windows_compatible = has('win32') || has('win64')
+let s:windows_compatible = xolox#misc#os#is_win()
 let s:mac_os_x_compatible = has('macunix')
 
 function! xolox#misc#path#which(...) " {{{1
@@ -18,7 +18,10 @@ function! xolox#misc#path#which(...) " {{{1
   "      '/usr/bin/gvim',
   "      '/usr/local/bin/vim',
   "      '/usr/bin/vim']
-  let extensions = s:windows_compatible ? split($PATHEXT, ';') : ['']
+  let extensions = ['']
+  if s:windows_compatible
+    call extend(extensions, split($PATHEXT, ';'))
+  endif
   let matches = []
   let checked = {}
   for program in a:000
