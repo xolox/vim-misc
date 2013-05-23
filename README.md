@@ -31,8 +31,8 @@ code using a bit of Python code.
 
 <!-- Start of generated documentation -->
 
-The documentation of the 43 functions below was extracted from
-12 Vim scripts on May 20, 2013 at 14:42.
+The documentation of the 42 functions below was extracted from
+11 Vim scripts on May 24, 2013 at 00:14.
 
 ### Handling of special buffers
 
@@ -79,29 +79,6 @@ Lock a special buffer so that its contents can no longer be edited.
 #### The `xolox#misc#buffer#unlock()` function
 
 Unlock a special buffer so that its content can be updated.
-
-### Compatibility checking
-
-This Vim script defines a version number for the miscellaneous scripts. Each
-of my plug-ins compares their expected version of the miscellaneous scripts
-against the version number defined inside the miscellaneous scripts.
-
-The version number is incremented whenever a change in the miscellaneous
-scripts breaks backwards compatibility. This enables my Vim plug-ins to fail
-early when they detect an incompatible version, instead of breaking at the
-worst possible moments :-).
-
-#### The `xolox#misc#compat#check()` function
-
-Expects three arguments:
-
-1. The name of the Vim plug-in that is using the miscellaneous scripts
-2. The version of the Vim plug-in that is using the miscellaneous scripts
-3. The version of the miscellaneous scripts expected by the plug-in
-
-When the loaded version of the miscellaneous scripts is different from the
-version expected by the plug-in, this function will raise an error message
-that explains what went wrong.
 
 ### Tab completion for user defined commands
 
