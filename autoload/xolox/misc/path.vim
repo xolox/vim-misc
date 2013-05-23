@@ -22,16 +22,26 @@ function! xolox#misc#path#which(...) " {{{1
   let matches = []
   let checked = {}
   for program in a:000
-    for extension in extensions
-      for directory in split($PATH, s:windows_compatible ? ';' : ':')
-        let directory = xolox#misc#path#absolute(directory)
-        if isdirectory(directory)
+    for directory in split($PATH, s:windows_compatible ? ';' : ':')
+      let directory = xolox#misc#path#absolute(directory)
+      if isdirectory(directory)
+        let found = 0
+        for extension in extensions
           let path = xolox#misc#path#merge(directory, program . extension)
+          if executable(path)
+            call add(matches, path)
+            let found = 1
+          endif
+        endfor
+        if s:windows_compatible && ! found
+          " Maybe the extension is already contained in program; try without
+          " $PATHEXT.
+          let path = xolox#misc#path#merge(directory, program)
           if executable(path)
             call add(matches, path)
           endif
         endif
-      endfor
+      endif
     endfor
   endfor
   return matches
