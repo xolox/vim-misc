@@ -1,33 +1,30 @@
 # Miscellaneous auto-load Vim scripts
 
 The git repository at [github.com/xolox/vim-misc] [repository] contains Vim
-scripts that are used by most of the [Vim plug-ins I've written] [plugins] yet
-don't really belong with any single one of the plug-ins. Basically it's an
-extended standard library of Vim script functions that I wrote during the
-development of my Vim plug-ins.
+scripts that are used by most of the [Vim plug-ins I've written] [plugins]
+yet don't really belong with any single one of the plug-ins. Basically it's
+an extended standard library of Vim script functions that I wrote during the
+development of my Vim profile and plug-ins.
 
-The miscellaneous scripts are bundled with each of my plug-ins:
+In the past these scripts were bundled with each plug-in, however that turned
+out to be a maintenance nightmare for me. That's why the miscellaneous scripts
+are now becoming a proper plug-in with their own page on Vim Online.
 
-- They are included in the `master` branches of the git repositories of my
-  plug-ins so that a `git clone` is all that's needed to get started. This
-  makes my plug-ins very easy to use with [Pathogen] [pathogen] and similar
-  plug-in managers for Vim.
-
-- They are also included in the ZIP archives published to Vim Online.
-
-Since the miscellaneous scripts are bundled with each plug-in, this repository
-(the git repository of the miscellaneous scripts themselves) is only used to
-track changes in a central, public place.
-
-If you're interested in more details about the inclusion of the miscellaneous
-scripts in my plug-ins, you can find a detailed explanation under the section
-"Management of changes" below.
+Because the miscellaneous scripts are no longer bundled with my Vim plug-ins,
+users are now required to install the miscellaneous scripts separately. This is
+unfortunate for users who are upgrading from a previous release that did bundle
+the miscellaneous scripts, but I don't see any way around this. Sorry!
 
 ## Function documentation
 
 Below is the documentation for the functions included in the miscellaneous
-scripts. The function descriptions given below were extracted from the source
-code using a bit of Python code.
+scripts. Anyone is free to use these functions in their own Vim profile and/or
+plug-ins. I care about backwards compatibility so won't break it without a good
+reason to do so.
+
+For those who are curious: The function descriptions given below were extracted
+from the source code of the miscellaneous scripts using a bit of Python code
+that I haven't published yet.
 
 <!-- Start of generated documentation -->
 
@@ -417,139 +414,6 @@ number) into a human friendly format, for example 70 seconds is phrased as
 
 <!-- End of generated documentation -->
 
-## Management of changes
-
-My current strategy for bundling the miscellaneous scripts with my plug-ins is
-a Python program that takes a Vim plug-in's source code and the latest sources
-of the miscellaneous scripts and merges them together (by rewriting the source
-code) in such a way that the miscellaneous scripts are isolated to the plug-in.
-If you know Python, you can think of it as a very basic virtual environment
-specialized to exactly one combination of software: My plug-ins and my
-miscellaneous scripts :-)
-
-### Why make things so complex?!
-
-I came up with this solution after multiple years of back and forth between Vim
-Online users, the GitHub crowd and my own sanity. An overview in chronological
-order:
-
-1. When I started publishing my first Vim plug-ins (in June 2010) I would
-   prepare ZIP archives for Vim Online using makefiles. The makefiles would
-   make sure the miscellaneous scripts were included in the uploaded
-   distributions. This had two disadvantages: It lost git history and the
-   repositories on GitHub were not usable out of the box, so [I got complaints
-   from GitHub (Pathogen) users] [github-complaints].
-
-2. My second attempt to solve the problem used git submodules which seemed like
-   the ideal solution until I actually started using them in March 2011:
-   Submodules are not initialized during a normal `git clone`, you need to use
-   `git clone --recursive` instead but Vim plug-in managers like [Pathogen]
-   [pathogen] and [Vundle] [vundle] don't do this (at least [they didn't when I
-   tried] [vundle-discussion]) so people would end up with broken checkouts.
-
-3. After finding out that git submodules were not going to solve my problems I
-   searched for other inclusion strategies supported by git. After a while I
-   came upon the [subtree merge strategy] [merge-strategy] which I started
-   using in May 2011 and stuck with for more than two years (because it
-   generally worked fine and seemed quite robust).
-
-4. In April 2013 the flat layout of the repository started bothering me because
-   it broke my personal workflow, so I changed it to the proper directory
-   layout of a Vim plug-in. Why did it break my workflow? Because I couldn't
-   get my [vim-reload] [reload] plug-in to properly reload miscellaneous
-   scripts without nasty hacks. Note to self: [Dropbox does not respect
-   symbolic links] [dropbox-vote-350] and Vim doesn't like them either ([E746]
-   [E746]).
-
-5. All of the solutions above shared one common flaw that I had been aware of
-   for a long time: If more than one of my plug-ins was installed, the
-   miscellaneous autoload scripts would all be loaded from the
-   `autoload/xolox/misc` subdirectory of a single plug-in.
-
-   This meant that when I broke compatibility in the miscellaneous scripts, I
-   had to make sure to merge the changes into all of my plug-ins and publish
-   all of them to GitHub & Vim Online. Even then, if a user had more than one
-   of my plug-ins installed but updated only one of them, the other plug-ins
-   (that would not yet be up to date) could break (because of the backwards
-   incompatible change).
-
-   To at least make this explicit I added versioning and a compatibility check
-   to all of my plug-ins at some point, however this turned out to be so
-   disruptive to my own workflow that I was tempted to simply slow down
-   development of my Vim plug-ins. My own processes working against me! :-s
-
-   Why was all of this so disruptive? I now maintain more than ten Vim plug-ins
-   and am planning to publish a dozen more (I'm cleaning up my `~/.vim` :-).
-   Although I've fully automated the release process of the plug-ins, it was
-   still a complete drag to merge the miscellaneous scripts and publish all of
-   the plug-ins to GitHub & Vim Online!
-
-   Vim Online would actually block my IP address during the release process
-   because it told me I was a bot (which was true :-). At that point I would
-   enable a VPN connection to publish the remaining plug-ins :-p. You see how
-   it was disruptive to my workflow?
-
-6. So finally we arrive in May 2013 where I decided to solve all of my problems
-   at once through automation. As I mentioned above I've fully automated the
-   release process of my Vim plug-ins. This is done by a Python program which
-   is called in three different modes: Interactively, as a git pre-commit
-   hook and as a post-commit hook.
-
-   I now develop my plug-ins on `dev` branches. These branches don't contain
-   the miscellaneous scripts. The Vim scripts in these branches call the
-   miscellaneous functions by their original names as used in the `vim-misc`
-   repository.
-
-   When I'm ready to release a new version of a Vim plug-in, I bump the version
-   number in the `dev` branch. The git post-commit hook sees the untagged
-   version and does the following:
-
-   1. It checks out the `master` branch and copies the latest changes from the
-      `dev` branch into the `master` branch's working directory.
-
-   2. It copies newly committed changes in my local checkout of the `vim-misc`
-      repository into the `master` branch's working directory.
-
-   3. It changes the autoload namespace of the miscellaneous scripts so that
-      they're embedded inside the plug-in's namespace. All function definitions
-      and call sites in the source code of the plug-in and miscellaneous
-      scripts are updated and the miscellaneous scripts are moved to their new
-      location.
-
-   4. The result is committed and tagged on the `master` branch so that a
-      release on Vim Online & GitHub contain exactly the same source code.
-
-   I call this technique dependency isolation and it is very specific to my
-   workflow. It also requires quite a lot of machinery :-). However, it should
-   solve all problems on the user side and it will improve my development
-   velocity a lot (I no longer have to think about backwards compatibility).
-   I've removed all compatibility checks between plug-ins and miscellaneous
-   scripts because the problem it solved no longer exists (AFAIK).
-
-   The only remaining problem I've thought of so far is that all of this makes
-   collaboration with other people harder. I will have to backport pull
-   requests made against `master` branches (despite the warning at the top of
-   every single `*.vim` file) every now and then. It also requires serious
-   collaborators to replicate (parts of) my local setup (see below :-).
-
-## My local setup
-
-I have a directory in my Dropbox with the git repositories of each of my Vim
-plug-ins (I test on Mac OS X, Ubuntu Linux 10.04 & 12.04 and Windows XP and
-Dropbox makes it *very* easy). I usually keep the `dev` branches of my plug-ins
-checked out so that I'm running the plug-ins with their original (non isolated)
-source code. The directory with my plug-ins is added to Vim's [runtimepath]
-[rtp] using [Pathogen] [pathogen]. I renamed the directory containing the
-miscellaneous scripts to `0-misc` so that I know for sure that Vim looks in
-there for miscellaneous scripts.
-
-So now when I'm working on a change in a plug-in that in turn requires a change
-in a miscellaneous script, I simply make both changes, [vim-reload] [reload]
-kicks in to reload the plug-in and miscellaneous script and I can test the
-changes a second after typing them! If it works I commit the change in both
-repositories (`vim-misc` first) and I'm done in less than five minutes and only
-have to publish a single plug-in :-).
-
 ## Contact
 
 If you have questions, bug reports, suggestions, etc. the author can be
@@ -562,15 +426,6 @@ This software is licensed under the [MIT license] [mit].
 © 2013 Peter Odding &lt;<peter@peterodding.com>&gt;.
 
 
-[dropbox-vote-350]: https://www.dropbox.com/votebox/350/preserve-implement-symlink-behaviour
-[E746]: http://vimdoc.sourceforge.net/htmldoc/eval.html#E746
-[github-complaints]: https://github.com/xolox/vim-easytags/issues/1
-[merge-strategy]: http://www.kernel.org/pub/software/scm/git/docs/howto/using-merge-subtree.html
 [mit]: http://en.wikipedia.org/wiki/MIT_License
-[pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
 [plugins]: http://peterodding.com/code/vim/
-[reload]: http://peterodding.com/code/vim/reload
 [repository]: https://github.com/xolox/vim-misc
-[rtp]: http://vimdoc.sourceforge.net/htmldoc/options.html#'runtimepath'
-[vundle-discussion]: https://github.com/gmarik/vundle/pull/41
-[vundle]: https://github.com/gmarik/vundle
