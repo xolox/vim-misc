@@ -1,14 +1,11 @@
 " Integration between Vim and its environment.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: May 19, 2013
+" Last Change: May 25, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
-if !exists('s:version')
-  let s:version = '1.1'
-  let s:enoimpl = "open.vim %s: %s() hasn't been implemented for your platform! If you have suggestions, please contact peter@peterodding.com."
-  let s:handlers = ['gnome-open', 'kde-open', 'exo-open', 'xdg-open']
-endif
+let s:enoimpl = "vim-misc %s: %s() hasn't been implemented for your platform! If you have suggestions, please contact peter@peterodding.com."
+let s:handlers = ['gnome-open', 'kde-open', 'exo-open', 'xdg-open']
 
 function! xolox#misc#open#file(path, ...) " {{{1
   " Given a pathname as the first argument, this opens the file with the
@@ -39,7 +36,7 @@ function! xolox#misc#open#file(path, ...) " {{{1
   else
     for handler in s:handlers + a:000
       if executable(handler)
-        call xolox#misc#msg#debug("open.vim %s: Using '%s' to open '%s'.", s:version, handler, a:path)
+        call xolox#misc#msg#debug("vim-misc %s: Using '%s' to open '%s'.", g:xolox#misc#version, handler, a:path)
         let cmd = shellescape(handler) . ' ' . shellescape(a:path) . ' 2>&1'
         call s:handle_error(cmd, system(cmd))
         return
@@ -80,12 +77,12 @@ endfunction
 
 function! s:handle_error(cmd, output) " {{{1
   if v:shell_error
-    let message = "open.vim %s: Failed to execute program! (command line: %s%s)"
+    let message = "vim-misc %s: Failed to execute program! (command line: %s%s)"
     let output = strtrans(xolox#misc#str#trim(a:output))
     if output != ''
       let output = ", output: " . string(output)
     endif
-    throw printf(message, s:version, a:cmd, output)
+    throw printf(message, g:xolox#misc#version, a:cmd, output)
   endif
 endfunction
 

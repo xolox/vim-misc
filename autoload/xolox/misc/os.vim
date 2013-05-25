@@ -1,10 +1,8 @@
 " Operating system interfaces.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: May 20, 2013
+" Last Change: May 25, 2013
 " URL: http://peterodding.com/code/vim/misc/
-
-let g:xolox#misc#os#version = '0.5'
 
 function! xolox#misc#os#is_win() " {{{1
   " Returns 1 (true) when on Microsoft Windows, 0 (false) otherwise.
@@ -21,22 +19,22 @@ function! xolox#misc#os#find_vim() " {{{1
   let progname = ''
   if has('macunix')
     " Special handling for Mac OS X where MacVim is usually not on the $PATH.
-    call xolox#misc#msg#debug("os.vim %s: Trying MacVim workaround to find Vim executable ..", g:xolox#misc#os#version)
+    call xolox#misc#msg#debug("vim-misc %s: Trying MacVim workaround to find Vim executable ..", g:xolox#misc#version)
     let segments = xolox#misc#path#split($VIMRUNTIME)
     if segments[-3:] == ['Resources', 'vim', 'runtime']
       let progname = xolox#misc#path#join(segments[0:-4] + ['MacOS', 'Vim'])
-      call xolox#misc#msg#debug("os.vim %s: The MacVim workaround resulted in the Vim executable %s.", g:xolox#misc#os#version, string(progname))
+      call xolox#misc#msg#debug("vim-misc %s: The MacVim workaround resulted in the Vim executable %s.", g:xolox#misc#version, string(progname))
     endif
   endif
   if empty(progname)
-    call xolox#misc#msg#debug("os.vim %s: Looking for Vim executable named %s on search path ..", g:xolox#misc#os#version, string(v:progname))
+    call xolox#misc#msg#debug("vim-misc %s: Looking for Vim executable named %s on search path ..", g:xolox#misc#version, string(v:progname))
     let candidates = xolox#misc#path#which(v:progname)
     if !empty(candidates)
-      call xolox#misc#msg#debug("os.vim %s: Found %i candidate(s) on search path: %s.", g:xolox#misc#os#version, len(candidates), string(candidates))
+      call xolox#misc#msg#debug("vim-misc %s: Found %i candidate(s) on search path: %s.", g:xolox#misc#version, len(candidates), string(candidates))
       let progname = candidates[0]
     endif
   endif
-  call xolox#misc#msg#debug("os.vim %s: Reporting Vim executable %s.", g:xolox#misc#os#version, string(progname))
+  call xolox#misc#msg#debug("vim-misc %s: Reporting Vim executable %s.", g:xolox#misc#version, string(progname))
   return progname
 endfunction
 
@@ -102,11 +100,11 @@ function! xolox#misc#os#exec(options) " {{{1
     try
       if xolox#shell#can_use_dll()
         " Let the user know what's happening (in case they're interested).
-        call xolox#misc#msg#debug("os.vim %s: Executing external command using compiled DLL: %s", g:xolox#misc#os#version, cmd)
+        call xolox#misc#msg#debug("vim-misc %s: Executing external command using compiled DLL: %s", g:xolox#misc#version, cmd)
         let exit_code = xolox#shell#execute_with_dll(cmd, async)
       endif
     catch /^Vim\%((\a\+)\)\=:E117/
-      call xolox#misc#msg#debug("os.vim %s: The vim-shell plug-in is not installed, falling back to system() function.", g:xolox#misc#os#version)
+      call xolox#misc#msg#debug("vim-misc %s: The vim-shell plug-in is not installed, falling back to system() function.", g:xolox#misc#version)
     endtry
 
     " If we cannot use the DLL, we fall back to the default and generic
@@ -120,7 +118,7 @@ function! xolox#misc#os#exec(options) " {{{1
         elseif has('unix')
           let cmd = '(' . cmd . ') &'
         else
-          call xolox#misc#msg#warn("os.vim %s: I don't know how to run commands asynchronously on your platform! Falling back to synchronous mode.", g:xolox#misc#os#version)
+          call xolox#misc#msg#warn("vim-misc %s: I don't know how to run commands asynchronously on your platform! Falling back to synchronous mode.", g:xolox#misc#version)
         endif
       endif
 
@@ -128,12 +126,12 @@ function! xolox#misc#os#exec(options) " {{{1
       " because we assume that standard output and standard error can be
       " redirected separately, but (t)csh does not support this.
       if has('unix')
-        call xolox#misc#msg#debug("os.vim %s: Generated shell expression: %s", g:xolox#misc#os#version, cmd)
+        call xolox#misc#msg#debug("vim-misc %s: Generated shell expression: %s", g:xolox#misc#version, cmd)
         let cmd = printf('sh -c %s', xolox#misc#escape#shell(cmd))
       endif
 
       " Let the user know what's happening (in case they're interested).
-      call xolox#misc#msg#debug("os.vim %s: Executing external command using system() function: %s", g:xolox#misc#os#version, cmd)
+      call xolox#misc#msg#debug("vim-misc %s: Executing external command using system() function: %s", g:xolox#misc#version, cmd)
       call system(cmd)
       let exit_code = v:shell_error
 
@@ -150,7 +148,7 @@ function! xolox#misc#os#exec(options) " {{{1
       " command, we'll do so now.
       if get(a:options, 'check', 1) && exit_code != 0
         " Prepare an error message with enough details so the user can investigate.
-        let msg = printf("os.vim %s: External command failed with exit code %d!", g:xolox#misc#os#version, result['exit_code'])
+        let msg = printf("vim-misc %s: External command failed with exit code %d!", g:xolox#misc#version, result['exit_code'])
         let msg .= printf("\nCommand line: %s", result['command'])
         " If the external command reported an error, we'll include it in our message.
         if !empty(result['stderr'])
