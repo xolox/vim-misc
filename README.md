@@ -39,7 +39,7 @@ that I haven't published yet.
 <!-- Start of generated documentation -->
 
 The documentation of the 42 functions below was extracted from
-11 Vim scripts on May 24, 2013 at 00:14.
+12 Vim scripts on June  1, 2013 at 14:57.
 
 ### Handling of special buffers
 
@@ -259,7 +259,9 @@ Returns 1 (true) when on Microsoft Windows, 0 (false) otherwise.
 Returns the program name of Vim as a string. On Windows and UNIX this
 simply returns [v:progname] [progname] while on Mac OS X there is some
 special magic to find MacVim's executable even though it's usually not on
-the executable search path.
+the executable search path. If you want, you can override the value
+returned from this function by setting the global variable
+`g:xolox#misc#os#vim_progname`.
 
 [progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
 

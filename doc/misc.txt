@@ -1,115 +1,127 @@
 *misc.txt*  Miscellaneous auto-load Vim scripts
 
 ===============================================================================
-                                                                 *misc-contents*
 Contents ~
 
- 1. Introduction                                             |misc-introduction|
- 2. Function documentation                         |misc-function-documentation|
-  1. Handling of special buffers              |misc-handling-of-special-buffers|
-   1. The |xolox#misc#buffer#is_empty()| function
-   2. The |xolox#misc#buffer#prepare()| function
-   3. The |xolox#misc#buffer#lock()| function
-   4. The |xolox#misc#buffer#unlock()| function
-  2. Tab completion for user defined commands
-   1. The |xolox#misc#complete#keywords()| function
-  3. String escaping functions                  |misc-string-escaping-functions|
-   1. The |xolox#misc#escape#pattern()| function
-   2. The |xolox#misc#escape#substitute()| function
-   3. The |xolox#misc#escape#shell()| function
-  4. List handling functions                      |misc-list-handling-functions|
-   1. The |xolox#misc#list#unique()| function
-   2. The |xolox#misc#list#binsert()| function
-  5. Functions to interact with the user
-   1. The |xolox#misc#msg#info()| function
-   2. The |xolox#misc#msg#warn()| function
-   3. The |xolox#misc#msg#debug()| function
-  6. Integration between Vim and its environment
-   1. The |xolox#misc#open#file()| function
-   2. The |xolox#misc#open#url()| function
-  7. Vim and plug-in option handling      |misc-vim-and-plug-in-option-handling|
-   1. The |xolox#misc#option#get()| function
-   2. The |xolox#misc#option#split()| function
-   3. The |xolox#misc#option#join()| function
-   4. The |xolox#misc#option#split_tags()| function
-   5. The |xolox#misc#option#join_tags()| function
-   6. The |xolox#misc#option#eval_tags()| function
-  8. Operating system interfaces              |misc-operating-system-interfaces|
-   1. The |xolox#misc#os#is_win()| function
-   2. The |xolox#misc#os#find_vim()| function
-   3. The |xolox#misc#os#exec()| function
-  9. Pathname manipulation functions      |misc-pathname-manipulation-functions|
-   1. The |xolox#misc#path#which()| function
-   2. The |xolox#misc#path#split()| function
-   3. The |xolox#misc#path#join()| function
-   4. The |xolox#misc#path#directory_separator()| function
-   5. The |xolox#misc#path#absolute()| function
-   6. The |xolox#misc#path#relative()| function
-   7. The |xolox#misc#path#merge()| function
-   8. The |xolox#misc#path#commonprefix()| function
-   9. The |xolox#misc#path#encode()| function
-   10. The |xolox#misc#path#decode()| function
-   11. The |xolox#misc#path#is_relative()| function
-   12. The |xolox#misc#path#tempdir()| function
-  10. String handling                                     |misc-string-handling|
-   1. The |xolox#misc#str#compact()| function
-   2. The |xolox#misc#str#trim()| function
-  11. Timing of long during operations   |misc-timing-of-long-during-operations|
-   1. The |xolox#misc#timer#start()| function
-   2. The |xolox#misc#timer#stop()| function
-   3. The |xolox#misc#timer#force()| function
-   4. The |xolox#misc#timer#format_timespan()| function
- 12. Contact                                                      |misc-contact|
- 13. License                                                      |misc-license|
+ 1. Introduction                                            |misc-introduction|
+ 2. Installation                                            |misc-installation|
+ 3. Function documentation                        |misc-function-documentation|
+  1. Handling of special buffers             |misc-handling-of-special-buffers|
+   1. The xolox#misc#buffer#is_empty() function
+   2. The xolox#misc#buffer#prepare() function
+   3. The xolox#misc#buffer#lock() function
+   4. The xolox#misc#buffer#unlock() function
+  2. Tab completion for user defined commands |misc-tab-completion-for-user-defined-commands|
+   1. The xolox#misc#complete#keywords() function
+  3. String escaping functions                 |misc-string-escaping-functions|
+   1. The xolox#misc#escape#pattern() function
+   2. The xolox#misc#escape#substitute() function
+   3. The xolox#misc#escape#shell() function
+  4. List handling functions                     |misc-list-handling-functions|
+   1. The xolox#misc#list#unique() function
+   2. The xolox#misc#list#binsert() function
+  5. Functions to interact with the user |misc-functions-to-interact-with-user|
+   1. The xolox#misc#msg#info() function
+   2. The xolox#misc#msg#warn() function
+   3. The xolox#misc#msg#debug() function
+  6. Integration between Vim and its environment |misc-integration-between-vim-its-environment|
+   1. The xolox#misc#open#file() function
+   2. The xolox#misc#open#url() function
+  7. Vim and plug-in option handling         |misc-vim-plug-in-option-handling|
+   1. The xolox#misc#option#get() function
+   2. The xolox#misc#option#split() function
+   3. The xolox#misc#option#join() function
+   4. The xolox#misc#option#split_tags() function
+   5. The xolox#misc#option#join_tags() function
+   6. The xolox#misc#option#eval_tags() function
+  8. Operating system interfaces             |misc-operating-system-interfaces|
+   1. The xolox#misc#os#is_win() function
+   2. The xolox#misc#os#find_vim() function
+   3. The xolox#misc#os#exec() function
+  9. Pathname manipulation functions     |misc-pathname-manipulation-functions|
+   1. The xolox#misc#path#which() function
+   2. The xolox#misc#path#split() function
+   3. The xolox#misc#path#join() function
+   4. The xolox#misc#path#directory_separator() function
+   5. The xolox#misc#path#absolute() function
+   6. The xolox#misc#path#relative() function
+   7. The xolox#misc#path#merge() function
+   8. The xolox#misc#path#commonprefix() function
+   9. The xolox#misc#path#encode() function
+   10. The xolox#misc#path#decode() function
+   11. The xolox#misc#path#is_relative() function
+   12. The xolox#misc#path#tempdir() function
+  10. String handling                                    |misc-string-handling|
+   1. The xolox#misc#str#compact() function
+   2. The xolox#misc#str#trim() function
+  11. Timing of long during operations  |misc-timing-of-long-during-operations|
+   1. The xolox#misc#timer#start() function
+   2. The xolox#misc#timer#stop() function
+   3. The xolox#misc#timer#force() function
+   4. The xolox#misc#timer#format_timespan() function
+ 4. Contact                                                      |misc-contact|
+ 5. License                                                      |misc-license|
+ 6. References                                                |misc-references|
 
 ===============================================================================
-                                                             *misc-introduction*
+                                                            *misc-introduction*
 Introduction ~
 
-The git repository at github.com/xolox/vim-misc [1] contains Vim scripts that
-are used by most of the Vim plug-ins I've written [2] yet don't really belong
-with any single one of the plug-ins. Basically it's an extended standard
-library of Vim script functions that I wrote during the development of my Vim
-profile and plug-ins.
+The vim-misc plug-in contains Vim scripts that are used by most of the Vim
+plug-ins I've written [1] yet don't really belong with any single one of the
+plug-ins. Basically it's an extended standard library of Vim script functions
+that I wrote during the development of my Vim profile and plug-ins.
 
 In the past these scripts were bundled with each plug-in, however that turned
 out to be a maintenance nightmare for me. That's why the miscellaneous scripts
-are now becoming a proper plug-in with their own page on Vim Online.
+are now a proper plug-in with their own page on Vim Online.
 
 Because the miscellaneous scripts are no longer bundled with my Vim plug-ins,
-users are now required to install the miscellaneous scripts separately. This
-is unfortunate for users who are upgrading from a previous release that did
-bundle the miscellaneous scripts, but I don't see any way around this. Sorry!
+users are now required to install the miscellaneous scripts separately. This is
+unfortunate for users who are upgrading from a previous release that did bundle
+the miscellaneous scripts, but I don't see any way around this. Sorry!
 
 ===============================================================================
-                                                   *misc-function-documentation*
+                                                            *misc-installation*
+Installation ~
+
+Unzip the most recent ZIP archive [2] file inside your Vim profile directory
+(usually this is '~/.vim' on UNIX and '%USERPROFILE%\vimfiles' on Windows),
+restart Vim and execute the command ':helptags ~/.vim/doc' (use ':helptags
+~\vimfiles\doc' instead on Windows).
+
+If you prefer you can also use Pathogen [3], Vundle [4] or a similar tool to
+install & update the plug-in using a local clone of the git repository.
+
+===============================================================================
+                                                  *misc-function-documentation*
 Function documentation ~
 
 Below is the documentation for the functions included in the miscellaneous
 scripts. Anyone is free to use these functions in their own Vim profile and/or
-plug-ins. I care about backwards compatibility so won't break it without a
-good reason to do so.
+plug-ins. I care about backwards compatibility so won't break it without a good
+reason to do so.
 
-For those who are curious: The function descriptions given below were
-extracted from the source code of the miscellaneous scripts using a bit of
-Python code that I haven't published yet.
+For those who are curious: The function descriptions given below were extracted
+from the source code of the miscellaneous scripts using a bit of Python code
+that I haven't published yet.
 
-The documentation of the 42 functions below was extracted from 11 Vim scripts
-on May 24, 2013 at 00:14.
+Start of generated documentation
+
+The documentation of the 42 functions below was extracted from 12 Vim scripts
+on June 1, 2013 at 14:57.
 
 -------------------------------------------------------------------------------
-                                              *misc-handling-of-special-buffers*
+                                             *misc-handling-of-special-buffers*
 Handling of special buffers ~
 
-The functions defined here make it easier to deal with special Vim buffers
-that contain text generated by a Vim plug-in. For example my vim-notes plug-in
-[3] generates several such buffers:
+The functions defined here make it easier to deal with special Vim buffers that
+contain text generated by a Vim plug-in. For example my vim-notes plug-in [5]
+generates several such buffers:
 
- - :RecentNotes [4] lists recently modified notes
-
- - :ShowTaggedNotes [5] lists notes grouped by tags
-
- - etc.
+- :RecentNotes [6] lists recently modified notes
+- :ShowTaggedNotes [7] lists notes grouped by tags
+- etc.
 
 Because the text in these buffers is generated, Vim shouldn't bother with swap
 files and it should never prompt the user whether to save changes to the
@@ -118,8 +130,8 @@ generated text.
 -------------------------------------------------------------------------------
 The *xolox#misc#buffer#is_empty()* function
 
-Checks if the current buffer is an empty, unchanged buffer which can be
-reused. Returns 1 if an empty buffer is found, 0 otherwise.
+Checks if the current buffer is an empty, unchanged buffer which can be reused.
+Returns 1 if an empty buffer is found, 0 otherwise.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#buffer#prepare()* function
@@ -128,12 +140,12 @@ Open a special buffer, i.e. a buffer that will hold generated contents, not
 directly edited by the user. The buffer can be customized by passing a
 dictionary with the following key/value pairs as the first argument:
 
- - name (required): The base name of the buffer (i.e. the base name of the file
-   loaded in the buffer, even though it isn't really a file and nothing is
-   really 'loaded' :-)
+- **name** (required): The base name of the buffer (i.e. the base name of the
+  file loaded in the buffer, even though it isn't really a file and nothing
+  is really 'loaded' :-)
 
- - path (required): The pathname of the buffer. May be relevant if |:lcd| or
-   |'autochdir'| is being used.
+- **path** (required): The pathname of the buffer. May be relevant if |:lcd|
+  or |'autochdir'| is being used.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#buffer#lock()* function
@@ -146,6 +158,7 @@ The *xolox#misc#buffer#unlock()* function
 Unlock a special buffer so that its content can be updated.
 
 -------------------------------------------------------------------------------
+                                *misc-tab-completion-for-user-defined-commands*
 Tab completion for user defined commands ~
 
 -------------------------------------------------------------------------------
@@ -155,10 +168,10 @@ This function can be used to perform keyword completion for user defined Vim
 commands based on the contents of the current buffer. Here's an example of how
 you would use it:
 >
-    :command -nargs=* -complete=customlist,xolox#misc#complete#keywords MyCmd call s:MyCmd(<f-args>)
-
+  :command -nargs=* -complete=customlist,xolox#misc#complete#keywords MyCmd call s:MyCmd(<f-args>)
+<
 -------------------------------------------------------------------------------
-                                                *misc-string-escaping-functions*
+                                               *misc-string-escaping-functions*
 String escaping functions ~
 
 -------------------------------------------------------------------------------
@@ -180,12 +193,12 @@ Takes a single string argument and converts it into a quoted command line
 argument.
 
 I was going to add a long rant here about Vim's |'shellslash'| option, but
-really, it won't make any difference. Let's just suffice to say that I have
-yet to encounter a single person out there who uses this option for its
-intended purpose (running a UNIX style shell on Microsoft Windows).
+really, it won't make any difference. Let's just suffice to say that I have yet
+to encounter a single person out there who uses this option for its intended
+purpose (running a UNIX style shell on Microsoft Windows).
 
 -------------------------------------------------------------------------------
-                                                  *misc-list-handling-functions*
+                                                 *misc-list-handling-functions*
 List handling functions ~
 
 -------------------------------------------------------------------------------
@@ -200,13 +213,12 @@ Performs in-place binary insertion, which depending on your use case can be
 more efficient than calling Vim's |sort()| function after each insertion (in
 cases where a single, final sort is not an option). Expects three arguments:
 
- - A list
-
- - A value to insert
-
- - 1 (true) when case should be ignored, 0 (false) otherwise
+1. A list
+2. A value to insert
+3. 1 (true) when case should be ignored, 0 (false) otherwise
 
 -------------------------------------------------------------------------------
+                                         *misc-functions-to-interact-with-user*
 Functions to interact with the user ~
 
 -------------------------------------------------------------------------------
@@ -229,39 +241,40 @@ increased verbosity by setting Vim's |'verbose'| option to one (1) or higher.
 This function has the same argument handling as Vim's |printf()| function.
 
 -------------------------------------------------------------------------------
+                                 *misc-integration-between-vim-its-environment*
 Integration between Vim and its environment ~
 
 -------------------------------------------------------------------------------
 The *xolox#misc#open#file()* function
 
 Given a pathname as the first argument, this opens the file with the program
-associated with the file type. So for example a text file might open in Vim,
-an '*.html' file would probably open in your web browser and a media file
-would open in a media player.
+associated with the file type. So for example a text file might open in Vim, an
+'*.html' file would probably open in your web browser and a media file would
+open in a media player.
 
 This should work on Windows, Mac OS X and most Linux distributions. If this
-fails to find a file association, you can pass one or more external commands
-to try as additional arguments. For example:
+fails to find a file association, you can pass one or more external commands to
+try as additional arguments. For example:
 >
-    :call xolox#misc#open#file('/path/to/my/file', 'firefox', 'google-chrome')
-
+  :call xolox#misc#open#file('/path/to/my/file', 'firefox', 'google-chrome')
+<
 This generally shouldn't be necessary but it might come in handy now and then.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#open#url()* function
 
-Given a URL as the first argument, this opens the URL in your preferred or
-best available web browser:
+Given a URL as the first argument, this opens the URL in your preferred or best
+available web browser:
 
- - In GUI environments a graphical web browser will open (or a new tab will be
-   created in an existing window)
+- In GUI environments a graphical web browser will open (or a new tab will be
+  created in an existing window)
 
- - In console Vim without a GUI environment, when you have any of 'lynx',
-   'links' or 'w3m' installed it will launch a command line web browser in
-   front of Vim (temporarily suspending Vim)
+- In console Vim without a GUI environment, when you have any of 'lynx',
+  'links' or 'w3m' installed it will launch a command line web browser in
+  front of Vim (temporarily suspending Vim)
 
 -------------------------------------------------------------------------------
-                                          *misc-vim-and-plug-in-option-handling*
+                                             *misc-vim-plug-in-option-handling*
 Vim and plug-in option handling ~
 
 -------------------------------------------------------------------------------
@@ -270,8 +283,8 @@ The *xolox#misc#option#get()* function
 Expects one or two arguments: 1. The name of a variable and 2. the default
 value if the variable does not exist.
 
-Returns the value of the variable from a buffer local variable, global
-variable or the default value, depending on which is defined.
+Returns the value of the variable from a buffer local variable, global variable
+or the default value, depending on which is defined.
 
 This is used by some of my Vim plug-ins for option handling, so that users can
 customize options for specific buffers.
@@ -282,29 +295,29 @@ The *xolox#misc#option#split()* function
 Given a multi-value Vim option like |'runtimepath'| this returns a list of
 strings. For example:
 >
-    :echo xolox#misc#option#split(&runtimepath)
-    ['/home/peter/Projects/Vim/misc',
-     '/home/peter/Projects/Vim/colorscheme-switcher',
-     '/home/peter/Projects/Vim/easytags',
-     ...]
-
+  :echo xolox#misc#option#split(&runtimepath)
+  ['/home/peter/Projects/Vim/misc',
+   '/home/peter/Projects/Vim/colorscheme-switcher',
+   '/home/peter/Projects/Vim/easytags',
+   ...]
+<
 -------------------------------------------------------------------------------
 The *xolox#misc#option#join()* function
 
-Given a list of strings like the ones returned by 'xolox#misc#option#split()',
+Given a list of strings like the ones returned by |xolox#misc#option#split()|,
 this joins the strings together into a single value that can be used to set a
 Vim option.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#option#split_tags()* function
 
-Customized version of 'xolox#misc#option#split()' with specialized handling
-for Vim's |'tags'| option.
+Customized version of |xolox#misc#option#split()| with specialized handling for
+Vim's |'tags'| option.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#option#join_tags()* function
 
-Customized version of 'xolox#misc#option#join()' with specialized handling for
+Customized version of |xolox#misc#option#join()| with specialized handling for
 Vim's |'tags'| option.
 
 -------------------------------------------------------------------------------
@@ -317,7 +330,7 @@ the first match is returned, otherwise (so by default) a list with all matches
 is returned.
 
 -------------------------------------------------------------------------------
-                                              *misc-operating-system-interfaces*
+                                             *misc-operating-system-interfaces*
 Operating system interfaces ~
 
 -------------------------------------------------------------------------------
@@ -330,45 +343,46 @@ The *xolox#misc#os#find_vim()* function
 
 Returns the program name of Vim as a string. On Windows and UNIX this simply
 returns |v:progname| while on Mac OS X there is some special magic to find
-MacVim's executable even though it's usually not on the executable search
-path.
+MacVim's executable even though it's usually not on the executable search path.
+If you want, you can override the value returned from this function by setting
+the global variable 'g:xolox#misc#os#vim_progname'.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#os#exec()* function
 
 Execute an external command (hiding the console on Microsoft Windows when my
-vim-shell plug-in [6] is installed).
+vim-shell plug-in [8] is installed).
 
 Expects a dictionary with the following key/value pairs as the first argument:
 
- - command (required): The command line to execute
+- **command** (required): The command line to execute
 
- - async (optional): set this to 1 (true) to execute the command in the
-   background (asynchronously)
+- **async** (optional): set this to 1 (true) to execute the command in the
+  background (asynchronously)
 
- - stdin (optional): a string or list of strings with the input for the
-   external command
+- **stdin** (optional): a string or list of strings with the input for the
+  external command
 
- - check (optional): set this to 0 (false) to disable checking of the exit code
-   of the external command (by default an exception will be raised when the
-   command fails)
+- **check** (optional): set this to 0 (false) to disable checking of the exit
+  code of the external command (by default an exception will be raised when
+  the command fails)
 
 Returns a dictionary with one or more of the following key/value pairs:
 
- - command (always available): the generated command line that was used to run
-   the external command
+- **command** (always available): the generated command line that was used to
+  run the external command
 
- - exit_code (only in synchronous mode): the exit status of the external
-   command (an integer, zero on success)
+- **exit_code** (only in synchronous mode): the exit status of the external
+  command (an integer, zero on success)
 
- - stdout (only in synchronous mode): the output of the command on the standard
-   output stream (a list of strings, one for each line)
+- **stdout** (only in synchronous mode): the output of the command on the
+  standard output stream (a list of strings, one for each line)
 
- - stderr (only in synchronous mode): the output of the command on the standard
-   error stream (as a list of strings, one for each line)
+- **stderr** (only in synchronous mode): the output of the command on the
+  standard error stream (as a list of strings, one for each line)
 
 -------------------------------------------------------------------------------
-                                          *misc-pathname-manipulation-functions*
+                                         *misc-pathname-manipulation-functions*
 Pathname manipulation functions ~
 
 -------------------------------------------------------------------------------
@@ -378,12 +392,12 @@ Scan the executable search path ('$PATH') for one or more external programs.
 Expects one or more string arguments with program names. Returns a list with
 the absolute pathnames of all found programs. Here's an example:
 >
-    :echo xolox#misc#path#which('gvim', 'vim')
-    ['/usr/local/bin/gvim',
-     '/usr/bin/gvim',
-     '/usr/local/bin/vim',
-     '/usr/bin/vim']
-
+  :echo xolox#misc#path#which('gvim', 'vim')
+  ['/usr/local/bin/gvim',
+   '/usr/bin/gvim',
+   '/usr/local/bin/vim',
+   '/usr/bin/vim']
+<
 -------------------------------------------------------------------------------
 The *xolox#misc#path#split()* function
 
@@ -393,27 +407,25 @@ components.
 On Windows, pathnames starting with two slashes or backslashes are UNC paths
 where the leading slashes are significant... In this case we split like this:
 
- - Input: '//server/share/directory'
-
- - Result: '['//server', 'share', 'directory']'
+- Input: "'//server/share/directory'"
+- Result: "['//server', 'share', 'directory']"
 
 Everything except Windows is treated like UNIX until someone has a better
 suggestion :-). In this case we split like this:
 
- - Input: '/foo/bar/baz'
-
- - Result: '['/', 'foo', 'bar', 'baz']'
+- Input: "'/foo/bar/baz'"
+- Result: "['/', 'foo', 'bar', 'baz']"
 
 To join a list of pathname components back into a single pathname string, use
-the 'xolox#misc#path#join()' function.
+the |xolox#misc#path#join()| function.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#path#join()* function
 
 Join a list of pathname components (the first and only argument) into a single
-pathname string. This is the counterpart to the 'xolox#misc#path#split()'
+pathname string. This is the counterpart to the |xolox#misc#path#split()|
 function and it expects a list of pathname components as returned by
-'xolox#misc#path#split()'.
+|xolox#misc#path#split()|.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#path#directory_separator()* function
@@ -423,7 +435,7 @@ Find the preferred directory separator for the platform and settings.
 -------------------------------------------------------------------------------
 The *xolox#misc#path#absolute()* function
 
-Canonicalize and resolve a pathname, regardless of whether it exists. This is
+Canonicalize and resolve a pathname, _regardless of whether it exists_. This is
 intended to support string comparison to determine whether two pathnames point
 to the same directory or file.
 
@@ -452,7 +464,7 @@ encode special characters.
 -------------------------------------------------------------------------------
 The *xolox#misc#path#decode()* function
 
-Decode a pathname previously encoded with 'xolox#misc#path#encode()'.
+Decode a pathname previously encoded with |xolox#misc#path#encode()|.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#path#is_relative()* function
@@ -466,7 +478,7 @@ The *xolox#misc#path#tempdir()* function
 Create a temporary directory and return the pathname of the directory.
 
 -------------------------------------------------------------------------------
-                                                          *misc-string-handling*
+                                                         *misc-string-handling*
 String handling ~
 
 -------------------------------------------------------------------------------
@@ -481,13 +493,14 @@ Trim all whitespace from the start and end of the string given as the first
 argument.
 
 -------------------------------------------------------------------------------
-                                         *misc-timing-of-long-during-operations*
+                                        *misc-timing-of-long-during-operations*
 Timing of long during operations ~
 
 -------------------------------------------------------------------------------
 The *xolox#misc#timer#start()* function
 
-Start a timer. This returns a list which can later be passed to 'xolox#misc#timer#stop()'.
+Start a timer. This returns a list which can later be passed to
+|xolox#misc#timer#stop()|.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#timer#stop()* function
@@ -497,7 +510,7 @@ increased verbosity by setting Vim's |'verbose'| option to one (1) or higher.
 
 This function has the same argument handling as Vim's |printf()| function with
 one difference: At the point where you want the elapsed time to be embedded,
-you write '%s' and you pass the list returned by 'xolox#misc#timer#start()' as
+you write '%s' and you pass the list returned by |xolox#misc#timer#start()| as
 an argument.
 
 -------------------------------------------------------------------------------
@@ -506,7 +519,7 @@ The *xolox#misc#timer#force()* function
 Show a formatted message to the user. This function has the same argument
 handling as Vim's |printf()| function with one difference: At the point where
 you want the elapsed time to be embedded, you write '%s' and you pass the list
-returned by 'xolox#misc#timer#start()' as an argument.
+returned by |xolox#misc#timer#start()| as an argument.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#timer#format_timespan()* function
@@ -515,31 +528,37 @@ Format a time stamp (a string containing a formatted floating point number)
 into a human friendly format, for example 70 seconds is phrased as "1 minute
 and 10 seconds".
 
+End of generated documentation
+
 ===============================================================================
-                                                                  *misc-contact*
+                                                                 *misc-contact*
 Contact ~
 
 If you have questions, bug reports, suggestions, etc. the author can be
 contacted at peter@peterodding.com. The latest version is available at
-http://peterodding.com/code/vim/misc and http://github.com/xolox/vim-misc.
+http://peterodding.com/code/vim/misc and http://github.com/xolox/vim-misc. If
+you like the script please vote for it on Vim Online [9].
 
 ===============================================================================
-                                                                  *misc-license*
+                                                                 *misc-license*
 License ~
 
-This software is licensed under the MIT license [7]. Copyright 2013 Peter
-Odding <peter@peterodding.com>.
+This software is licensed under the MIT license [10]. © 2013 Peter Odding
+<peter@peterodding.com>.
 
 ===============================================================================
-                                                               *misc-references*
+                                                              *misc-references*
 References ~
 
-[1] https://github.com/xolox/vim-misc
-[2] http://peterodding.com/code/vim/
-[3] http://peterodding.com/code/vim/notes/
-[4] http://peterodding.com/code/vim/notes/#recentnotes_command
-[5] http://peterodding.com/code/vim/notes/#showtaggednotes_command
-[6] http://peterodding.com/code/vim/shell/
-[7] http://en.wikipedia.org/wiki/MIT_License
+[1] http://peterodding.com/code/vim/
+[2] http://peterodding.com/code/vim/downloads/misc.zip
+[3] http://www.vim.org/scripts/script.php?script_id=2332
+[4] https://github.com/gmarik/vundle
+[5] http://peterodding.com/code/vim/notes/
+[6] http://peterodding.com/code/vim/notes/#recentnotes_command
+[7] http://peterodding.com/code/vim/notes/#showtaggednotes_command
+[8] http://peterodding.com/code/vim/shell/
+[9] http://www.vim.org/scripts/script.php?script_id=4597
+[10] http://en.wikipedia.org/wiki/MIT_License
 
 vim: ft=help
