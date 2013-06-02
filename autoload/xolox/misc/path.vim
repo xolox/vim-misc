@@ -1,7 +1,7 @@
 " Pathname manipulation functions.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 1, 2013
+" Last Change: June 2, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
 let s:windows_compatible = xolox#misc#os#is_win()
@@ -93,7 +93,7 @@ function! xolox#misc#path#join(parts) " {{{1
   if type(a:parts) == type([])
     if s:windows_compatible
       return join(a:parts, xolox#misc#path#directory_separator())
-    elseif a:parts[0] == '/'
+    elseif get(a:parts, 0) == '/'
       " Absolute path on UNIX (non-Windows).
       return '/' . join(a:parts[1:], '/')
     else

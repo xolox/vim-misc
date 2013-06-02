@@ -38,8 +38,8 @@ that I haven't published yet.
 
 <!-- Start of generated documentation -->
 
-The documentation of the 42 functions below was extracted from
-12 Vim scripts on June  1, 2013 at 14:57.
+The documentation of the 43 functions below was extracted from
+13 Vim scripts on June  2, 2013 at 16:58.
 
 ### Handling of special buffers
 
@@ -389,6 +389,12 @@ Compact whitespace in the string given as the first argument.
 
 Trim all whitespace from the start and end of the string given as the
 first argument.
+
+### Tests for my miscellaneous Vim scripts
+
+#### The `xolox#misc#tests#run_all()` function
+
+Run the automated tests of the miscellaneous functions.
 
 ### Timing of long during operations
 
