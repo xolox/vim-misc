@@ -1,7 +1,7 @@
 " List handling functions.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: May 19, 2013
+" Last Change: June 2, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
 function! xolox#misc#list#unique(list) " {{{1
@@ -38,20 +38,5 @@ function! s:binsert_r(list, low, high, value, ignorecase)
     return mid
   endif
 endfunction
-
-if 0
-  " Tests for xolox#misc#list#binsert().
-  let s:list = ['a', 'B', 'e']
-  function! s:test(value, expected)
-    call xolox#misc#list#binsert(s:list, a:value, 1)
-    if s:list != a:expected
-      call xolox#misc#msg#warn("list.vim: Test failed! Expected %s, got %s",
-            \ string(a:expected), string(s:list))
-    endif
-  endfunction
-  call s:test('c', ['a', 'B', 'c', 'e'])
-  call s:test('D', ['a', 'B', 'c', 'D', 'e'])
-  call s:test('f', ['a', 'B', 'c', 'D', 'e', 'f'])
-endif
 
 " vim: ts=2 sw=2 et
