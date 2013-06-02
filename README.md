@@ -39,7 +39,7 @@ that I haven't published yet.
 <!-- Start of generated documentation -->
 
 The documentation of the 43 functions below was extracted from
-14 Vim scripts on June  2, 2013 at 20:24.
+14 Vim scripts on June  2, 2013 at 21:27.
 
 ### Handling of special buffers
 
@@ -158,22 +158,39 @@ three arguments:
 
 #### The `xolox#misc#msg#info()` function
 
-Show a formatted informational message to the user. This function has the
-same argument handling as Vim's [printf()] [printf] function.
+Show a formatted informational message to the user.
 
-[printf]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
+This function has the same argument handling as Vim's [printf()] []
+function with one notable difference: Any arguments which are not numbers
+or strings are coerced to strings using Vim's [string()] [] function.
+
+In the case of `xolox#misc#msg#info()`, automatic string coercion simply
+makes the function a bit easier to use.
+
+[printf()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
+[string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
 
 #### The `xolox#misc#msg#warn()` function
 
-Show a formatted warning message to the user. This function has the same
-argument handling as Vim's [printf()] [printf] function.
+Show a formatted warning message to the user.
+
+This function has the same argument handling as the
+`xolox#misc#msg#info()` function.
 
 #### The `xolox#misc#msg#debug()` function
 
-Show a formatted debugging message to the user, if the user has enabled
-increased verbosity by setting Vim's ['verbose'] [verbose] option to one
-(1) or higher. This function has the same argument handling as Vim's
-[printf()] [printf] function.
+Show a formatted debugging message to the user, *if the user has enabled
+increased verbosity by setting Vim's ['verbose'] [] option to one
+(1) or higher*.
+
+This function has the same argument handling as the
+`xolox#misc#msg#info()` function.
+
+In the case of `xolox#misc#msg#debug()`, automatic string coercion
+provides lazy evaluation in the sense that complex data structures are
+only converted to strings when the user has enabled increased verbosity.
+
+['verbose']: http://vimdoc.sourceforge.net/htmldoc/options.html#'verbose'
 
 ### Integration between Vim and its environment
 

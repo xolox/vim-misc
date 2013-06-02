@@ -1,7 +1,7 @@
 " Functions to interact with the user.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: May 20, 2013
+" Last Change: June 2, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
 if !exists('g:xolox_message_buffer')
@@ -14,24 +14,41 @@ if !exists('g:xolox_messages')
 endif
 
 function! xolox#misc#msg#info(...) " {{{1
-  " Show a formatted informational message to the user. This function has the
-  " same argument handling as Vim's [printf()] [printf] function.
+  " Show a formatted informational message to the user.
   "
-  " [printf]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
+  " This function has the same argument handling as Vim's [printf()] []
+  " function with one notable difference: Any arguments which are not numbers
+  " or strings are coerced to strings using Vim's [string()] [] function.
+  "
+  " In the case of `xolox#misc#msg#info()`, automatic string coercion simply
+  " makes the function a bit easier to use.
+  "
+  " [printf()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
+  " [string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
   call s:show_message('title', a:000)
 endfunction
 
 function! xolox#misc#msg#warn(...) " {{{1
-  " Show a formatted warning message to the user. This function has the same
-  " argument handling as Vim's [printf()] [printf] function.
+  " Show a formatted warning message to the user.
+  "
+  " This function has the same argument handling as the
+  " `xolox#misc#msg#info()` function.
   call s:show_message('warningmsg', a:000)
 endfunction
 
 function! xolox#misc#msg#debug(...) " {{{1
-  " Show a formatted debugging message to the user, if the user has enabled
-  " increased verbosity by setting Vim's ['verbose'] [verbose] option to one
-  " (1) or higher. This function has the same argument handling as Vim's
-  " [printf()] [printf] function.
+  " Show a formatted debugging message to the user, *if the user has enabled
+  " increased verbosity by setting Vim's ['verbose'] [] option to one
+  " (1) or higher*.
+  "
+  " This function has the same argument handling as the
+  " `xolox#misc#msg#info()` function.
+  "
+  " In the case of `xolox#misc#msg#debug()`, automatic string coercion
+  " provides lazy evaluation in the sense that complex data structures are
+  " only converted to strings when the user has enabled increased verbosity.
+  "
+  " ['verbose']: http://vimdoc.sourceforge.net/htmldoc/options.html#'verbose'
   if &vbs >= 1
     call s:show_message('question', a:000)
   endif
@@ -43,7 +60,8 @@ function! s:show_message(hlgroup, args) " {{{1
   if nargs == 1
     let message = a:args[0]
   elseif nargs >= 2
-    let message = call('printf', a:args)
+    let args = map(copy(a:args), 's:coerce_argument(v:val)')
+    let message = call('printf', args)
   endif
   if exists('message')
     try
@@ -74,6 +92,16 @@ function! s:show_message(hlgroup, args) " {{{1
       " Always clear message highlighting, even when interrupted by Ctrl-C.
       echohl none
     endtry
+  endif
+endfunction
+
+function! s:coerce_argument(value) " {{{1
+  " Callback to coerce printf() arguments into strings.
+  let value_type = type(a:value)
+  if value_type != type(0) && value_type != type('')
+    return string(a:value)
+  else
+    return a:value
   endif
 endfunction
 
