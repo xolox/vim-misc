@@ -38,7 +38,7 @@ that I haven't published yet.
 
 <!-- Start of generated documentation -->
 
-The documentation of the 43 functions below was extracted from
+The documentation of the 44 functions below was extracted from
 14 Vim scripts on June  2, 2013 at 21:27.
 
 ### Handling of special buffers
@@ -128,6 +128,12 @@ Microsoft Windows).
 [shellslash]: http://vimdoc.sourceforge.net/htmldoc/options.html#'shellslash'
 
 ### Human friendly string formatting for Vim
+
+#### The `xolox#misc#format#pluralize()` function
+
+Concatenate a counter (the first argument, expected to be an integer) with
+a singular or plural label (the second and third arguments, both expected
+to be strings).
 
 #### The `xolox#misc#format#timestamp()` function
 
