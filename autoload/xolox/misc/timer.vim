@@ -13,11 +13,12 @@ if !exists('g:timer_verbosity')
 endif
 
 let s:has_reltime = has('reltime')
+let s:unique_marker = 'xolox#misc#timer#value'
 
 function! xolox#misc#timer#start() " {{{1
   " Start a timer. This returns a list which can later be passed to
   " `xolox#misc#timer#stop()`.
-  return s:has_reltime ? reltime() : [localtime()]
+  return [s:unique_marker, s:has_reltime ? reltime() : localtime()]
 endfunction
 
 function! xolox#misc#timer#stop(...) " {{{1
@@ -46,15 +47,15 @@ function! xolox#misc#timer#force(...) " {{{1
 endfunction
 
 function! s:convert_value(value) " {{{1
-  if type(a:value) != type([])
-    return a:value
-  else
+  if type(a:value) == type([]) && len(a:value) == 2 && a:value[0] == s:unique_marker
     if s:has_reltime
-      let ts = xolox#misc#str#trim(reltimestr(reltime(a:value)))
+      let ts = xolox#misc#str#trim(reltimestr(reltime(a:value[1])))
     else
-      let ts = localtime() - a:value[0]
+      let ts = localtime() - a:value[1]
     endif
     return xolox#misc#format#timestamp(ts)
+  else
+    return a:value
   endif
 endfunction
 

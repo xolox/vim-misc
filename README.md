@@ -39,7 +39,7 @@ that I haven't published yet.
 <!-- Start of generated documentation -->
 
 The documentation of the 43 functions below was extracted from
-15 Vim scripts on June  2, 2013 at 18:21.
+14 Vim scripts on June  2, 2013 at 20:24.
 
 ### Handling of special buffers
 
