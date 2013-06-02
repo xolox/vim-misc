@@ -39,7 +39,7 @@ that I haven't published yet.
 <!-- Start of generated documentation -->
 
 The documentation of the 43 functions below was extracted from
-13 Vim scripts on June  2, 2013 at 16:58.
+15 Vim scripts on June  2, 2013 at 18:21.
 
 ### Handling of special buffers
 
@@ -126,6 +126,14 @@ this option for its intended purpose (running a UNIX style shell on
 Microsoft Windows).
 
 [shellslash]: http://vimdoc.sourceforge.net/htmldoc/options.html#'shellslash'
+
+### Human friendly string formatting for Vim
+
+#### The `xolox#misc#format#timestamp()` function
+
+Format a time stamp (a string containing a formatted floating point
+number) into a human friendly format, for example 70 seconds is phrased as
+"1 minute and 10 seconds".
 
 ### List handling functions
 
@@ -423,12 +431,6 @@ Show a formatted message to the user. This function has the same argument
 handling as Vim's [printf()] [printf] function with one difference: At the
 point where you want the elapsed time to be embedded, you write `%s` and
 you pass the list returned by `xolox#misc#timer#start()` as an argument.
-
-#### The `xolox#misc#timer#format_timespan()` function
-
-Format a time stamp (a string containing a formatted floating point
-number) into a human friendly format, for example 70 seconds is phrased as
-"1 minute and 10 seconds".
 
 <!-- End of generated documentation -->
 
