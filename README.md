@@ -38,7 +38,7 @@ from the source code of the miscellaneous scripts using the Python module
 <!-- Start of generated documentation -->
 
 The documentation of the 67 functions below was extracted from
-15 Vim scripts on June  3, 2013 at 21:23.
+15 Vim scripts on June  3, 2013 at 21:53.
 
 ### Handling of special buffers
 
@@ -286,14 +286,18 @@ Returns 1 (true) when on Microsoft Windows, 0 (false) otherwise.
 
 #### The `xolox#misc#os#find_vim()` function
 
-Returns the program name of Vim as a string. On Windows and UNIX this
-simply returns [v:progname] [progname] while on Mac OS X there is some
-special magic to find MacVim's executable even though it's usually not on
-the executable search path. If you want, you can override the value
-returned from this function by setting the global variable
+Returns the program name of Vim as a string. On Windows and UNIX this just
+[v:progname] [] as an absolute pathname while on Mac OS X there is
+some special magic to find MacVim's executable even though it's usually
+not on the executable search path. If you want, you can override the
+value returned from this function by setting the global variable
 `g:xolox#misc#os#vim_progname`.
 
-[progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
+By default the choice of console Vim vs graphical Vim is made based on
+the value of [v:progname] [], but if you have a preference you can pass
+the string `vim` or `gvim` as the first and only argument.
+
+[v:progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
 
 #### The `xolox#misc#os#exec()` function
 

@@ -1,7 +1,7 @@
 " Operating system interfaces.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 1, 2013
+" Last Change: June 3, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
 function! xolox#misc#os#is_win() " {{{1
@@ -9,39 +9,51 @@ function! xolox#misc#os#is_win() " {{{1
   return has('win16') || has('win32') || has('win64')
 endfunction
 
-function! xolox#misc#os#find_vim() " {{{1
-  " Returns the program name of Vim as a string. On Windows and UNIX this
-  " simply returns [v:progname] [progname] while on Mac OS X there is some
-  " special magic to find MacVim's executable even though it's usually not on
-  " the executable search path. If you want, you can override the value
-  " returned from this function by setting the global variable
+function! xolox#misc#os#find_vim(...) " {{{1
+  " Returns the program name of Vim as a string. On Windows and UNIX this just
+  " [v:progname] [] as an absolute pathname while on Mac OS X there is
+  " some special magic to find MacVim's executable even though it's usually
+  " not on the executable search path. If you want, you can override the
+  " value returned from this function by setting the global variable
   " `g:xolox#misc#os#vim_progname`.
   "
-  " [progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
-  let progname = ''
-  if exists('g:xolox#misc#os#vim_progname')
-    let progname = g:xolox#misc#os#vim_progname
+  " By default the choice of console Vim vs graphical Vim is made based on
+  " the value of [v:progname] [], but if you have a preference you can pass
+  " the string `vim` or `gvim` as the first and only argument.
+  "
+  " [v:progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
+  if exists('a:1')
+    let program_name = a:1
+  else
+    let program_name = v:progname
   endif
-  if empty(progname) && has('macunix')
+  if exists('g:xolox#misc#os#vim_progname')
+    let pathname = g:xolox#misc#os#vim_progname
+  else
+    let pathname = ''
+  endif
+  if empty(pathname) && has('macunix')
     " Special handling for Mac OS X where MacVim is usually not on the $PATH.
+    " This always returns the "Vim" executable and not "MacVim" (regardless of
+    " the caller's preference) because "MacVim" has funky dock magic going on.
     call xolox#misc#msg#debug("vim-misc %s: Trying MacVim workaround to find Vim executable ..", g:xolox#misc#version)
     let segments = xolox#misc#path#split($VIMRUNTIME)
     if segments[-3:] == ['Resources', 'vim', 'runtime']
-      let progname = xolox#misc#path#join(segments[0:-4] + ['MacOS', 'Vim'])
-      call xolox#misc#msg#debug("vim-misc %s: The MacVim workaround resulted in the Vim executable %s.", g:xolox#misc#version, string(progname))
+      let pathname = xolox#misc#path#join(segments[0:-4] + ['MacOS', 'Vim'])
+      call xolox#misc#msg#debug("vim-misc %s: The MacVim workaround resulted in the Vim executable %s.", g:xolox#misc#version, string(pathname))
     endif
   endif
-  if empty(progname)
+  if empty(pathname)
     " Default logic.
-    call xolox#misc#msg#debug("vim-misc %s: Looking for Vim executable named %s on search path ..", g:xolox#misc#version, string(v:progname))
-    let candidates = xolox#misc#path#which(v:progname)
+    call xolox#misc#msg#debug("vim-misc %s: Looking for Vim executable named %s on search path ..", g:xolox#misc#version, string(program_name))
+    let candidates = xolox#misc#path#which(program_name)
     if !empty(candidates)
       call xolox#misc#msg#debug("vim-misc %s: Found %i candidate(s) on search path: %s.", g:xolox#misc#version, len(candidates), string(candidates))
-      let progname = candidates[0]
+      let pathname = candidates[0]
     endif
   endif
-  call xolox#misc#msg#debug("vim-misc %s: Reporting Vim executable %s.", g:xolox#misc#version, string(progname))
-  return progname
+  call xolox#misc#msg#debug("vim-misc %s: Reporting Vim executable %s.", g:xolox#misc#version, string(pathname))
+  return pathname
 endfunction
 
 function! xolox#misc#os#exec(options) " {{{1
