@@ -55,8 +55,9 @@ Contents ~
    11. The |xolox#misc#path#is_relative()| function
    12. The |xolox#misc#path#tempdir()| function
   11. String handling                                    |misc-string-handling|
-   1. The |xolox#misc#str#compact()| function
-   2. The |xolox#misc#str#trim()| function
+   1. The |xolox#misc#str#ucfirst()| function
+   2. The |xolox#misc#str#compact()| function
+   3. The |xolox#misc#str#trim()| function
   12. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
    1. The |xolox#misc#test#reset()| function
    2. The |xolox#misc#test#summarize()| function
@@ -135,8 +136,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 66 functions below was extracted from 15 Vim scripts
-on June 2, 2013 at 22:18.
+The documentation of the 67 functions below was extracted from 15 Vim scripts
+on June 3, 2013 at 21:23.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -539,6 +540,11 @@ Create a temporary directory and return the pathname of the directory.
 -------------------------------------------------------------------------------
                                                          *misc-string-handling*
 String handling ~
+
+-------------------------------------------------------------------------------
+The *xolox#misc#str#ucfirst()* function
+
+Uppercase the first character in a string.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#str#compact()* function

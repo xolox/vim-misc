@@ -1,8 +1,13 @@
 " String handling.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: May 19, 2013
+" Last Change: June 3, 2013
 " URL: http://peterodding.com/code/vim/misc/
+
+function! xolox#misc#str#ucfirst(s)
+  " Uppercase the first character in a string.
+  return substitute(a:s, '^.', '\U\0', '')
+endfunction
 
 function! xolox#misc#str#compact(s)
   " Compact whitespace in the string given as the first argument.

@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 66 functions below was extracted from
-15 Vim scripts on June  2, 2013 at 22:18.
+The documentation of the 67 functions below was extracted from
+15 Vim scripts on June  3, 2013 at 21:23.
 
 ### Handling of special buffers
 
@@ -410,6 +410,10 @@ relative, false (0) otherwise.
 Create a temporary directory and return the pathname of the directory.
 
 ### String handling
+
+#### The `xolox#misc#str#ucfirst()` function
+
+Uppercase the first character in a string.
 
 #### The `xolox#misc#str#compact()` function
 
