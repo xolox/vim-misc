@@ -1,8 +1,31 @@
 " Operating system interfaces.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 3, 2013
+" Last Change: June 19, 2013
 " URL: http://peterodding.com/code/vim/misc/
+
+function! xolox#misc#os#is_mac() " {{{1
+  " Returns 1 (true) when on Mac OS X, 0 (false) otherwise. You would expect
+  " this to simply check the Vim feature list, but for some obscure reason the
+  " `/usr/bin/vim` included in Mac OS X (verified on version 10.7.5) returns 0
+  " (false) in response to `has('mac')`, so we check the output of `uname`
+  " to avoid false negatives.
+  if !exists('s:is_mac')
+    " By default we assume we are *not* on Mac OS X.
+    let s:is_mac = 0
+    if has('mac') || has('macunix') || has('gui_mac')
+      " If Vim's feature list indicates we are on Mac OS X, we have our answer :-).
+      let s:is_mac = 1
+    else
+      " Otherwise we check the output of `uname' to avoid false negatives.
+      let result = xolox#misc#os#exec({'command': 'uname', 'check': 0})
+      if result['exit_code'] == 0 && get(result['stdout'], 0, '') == 'Darwin'
+        let s:is_mac = 1
+      endif
+    endif
+  endif
+  return s:is_mac
+endfunction
 
 function! xolox#misc#os#is_win() " {{{1
   " Returns 1 (true) when on Microsoft Windows, 0 (false) otherwise.
@@ -32,7 +55,7 @@ function! xolox#misc#os#find_vim(...) " {{{1
   else
     let pathname = ''
   endif
-  if empty(pathname) && has('macunix')
+  if empty(pathname) && xolox#misc#os#is_mac()
     " Special handling for Mac OS X where MacVim is usually not on the $PATH.
     " This always returns the "Vim" executable and not "MacVim" (regardless of
     " the caller's preference) because "MacVim" has funky dock magic going on.

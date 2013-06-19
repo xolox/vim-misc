@@ -29,7 +29,7 @@ function! xolox#misc#open#file(location, ...) " {{{1
       silent execute printf(command, xolox#misc#escape#shell(a:location))
     endtry
     return
-  elseif has('macunix')
+  elseif xolox#misc#os#is_mac()
     call xolox#misc#msg#debug("vim-misc %s: Detected Mac OS X, using 'open' command to open %s ..", g:xolox#misc#version, string(a:location))
     let cmd = 'open ' . shellescape(a:location) . ' 2>&1'
     call s:handle_error(cmd, system(cmd))

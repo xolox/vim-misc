@@ -38,9 +38,10 @@ Contents ~
    5. The |xolox#misc#option#join_tags()| function
    6. The |xolox#misc#option#eval_tags()| function
   9. Operating system interfaces             |misc-operating-system-interfaces|
-   1. The |xolox#misc#os#is_win()| function
-   2. The |xolox#misc#os#find_vim()| function
-   3. The |xolox#misc#os#exec()| function
+   1. The |xolox#misc#os#is_mac()| function
+   2. The |xolox#misc#os#is_win()| function
+   3. The |xolox#misc#os#find_vim()| function
+   4. The |xolox#misc#os#exec()| function
   10. Pathname manipulation functions    |misc-pathname-manipulation-functions|
    1. The |xolox#misc#path#which()| function
    2. The |xolox#misc#path#split()| function
@@ -136,8 +137,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 67 functions below was extracted from 15 Vim scripts
-on June 19, 2013 at 21:00.
+The documentation of the 68 functions below was extracted from 15 Vim scripts
+on June 19, 2013 at 21:05.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -392,6 +393,15 @@ is returned.
 -------------------------------------------------------------------------------
                                              *misc-operating-system-interfaces*
 Operating system interfaces ~
+
+-------------------------------------------------------------------------------
+The *xolox#misc#os#is_mac()* function
+
+Returns 1 (true) when on Mac OS X, 0 (false) otherwise. You would expect this
+to simply check the Vim feature list, but for some obscure reason the
+'/usr/bin/vim' included in Mac OS X (verified on version 10.7.5) returns 0
+(false) in response to "has('mac')", so we check the output of 'uname' to avoid
+false negatives.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#os#is_win()* function
