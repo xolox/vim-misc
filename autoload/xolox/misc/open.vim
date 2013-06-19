@@ -67,7 +67,10 @@ function! xolox#misc#open#url(url) " {{{1
       let url = 'mailto:' . url
     endif
   endif
-  if has('unix') && !has('gui_running') && $DISPLAY == ''
+  let on_unix = has('unix')
+  let not_on_mac = !xolox#misc#os#is_mac()
+  let no_gui_available = (has('gui_running') == 0 && $DISPLAY == '')
+  if on_unix && not_on_mac && no_gui_available
     call xolox#misc#msg#debug("vim-misc %s: Using command line web browser because no GUI seems to be available ..", g:xolox#misc#version)
     for browser in ['lynx', 'links', 'w3m']
       call xolox#misc#msg#debug("vim-misc %s: Checking whether %s command line web browser is installed ..", g:xolox#misc#version, string(browser))
