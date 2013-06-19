@@ -30,6 +30,7 @@ function! xolox#misc#open#file(location, ...) " {{{1
     endtry
     return
   elseif has('macunix')
+    call xolox#misc#msg#debug("vim-misc %s: Detected Mac OS X, using 'open' command to open %s ..", g:xolox#misc#version, string(a:location))
     let cmd = 'open ' . shellescape(a:location) . ' 2>&1'
     call s:handle_error(cmd, system(cmd))
     return
@@ -57,21 +58,28 @@ function! xolox#misc#open#url(url) " {{{1
   "   front of Vim (temporarily suspending Vim)
   let url = a:url
   if url !~ '^\w\+://'
+    call xolox#misc#msg#debug("vim-misc %s: The URL %s doesn't contain a scheme, improvising ..", g:xolox#misc#version, string(url))
     if url !~ '@'
+      call xolox#misc#msg#debug("vim-misc %s: Defaulting to http:// URL scheme ..", g:xolox#misc#version)
       let url = 'http://' . url
     elseif url !~ '^mailto:'
+      call xolox#misc#msg#debug("vim-misc %s: Defaulting to mailto: URL scheme ..", g:xolox#misc#version)
       let url = 'mailto:' . url
     endif
   endif
   if has('unix') && !has('gui_running') && $DISPLAY == ''
+    call xolox#misc#msg#debug("vim-misc %s: Using command line web browser because no GUI seems to be available ..", g:xolox#misc#version)
     for browser in ['lynx', 'links', 'w3m']
+      call xolox#misc#msg#debug("vim-misc %s: Checking whether %s command line web browser is installed ..", g:xolox#misc#version, string(browser))
       if executable(browser)
+        call xolox#misc#msg#debug("vim-misc %s: Found %s, using it to open %s ..", g:xolox#misc#version, string(browser), string(url))
         execute '!' . browser fnameescape(url)
         call s:handle_error(browser . ' ' . url, '')
         return
       endif
     endfor
   endif
+  call xolox#misc#msg#debug("vim-misc %s: Defaulting to GUI web browser to open %s ..", g:xolox#misc#version, string(url))
   call xolox#misc#open#file(url, 'firefox', 'google-chrome')
 endfunction
 
