@@ -1,10 +1,10 @@
 " Integration between Vim and its environment.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: May 25, 2013
+" Last Change: June 19, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
-let s:enoimpl = "vim-misc %s: %s() hasn't been implemented for your platform! If you have suggestions, please contact peter@peterodding.com."
+let s:enoimpl = "vim-misc %s: %s() hasn't been implemented for your platform! If you have suggestions, please get in touch at https://github.com/xolox/vim-misc/issues"
 let s:handlers = ['gnome-open', 'kde-open', 'exo-open', 'xdg-open']
 
 function! xolox#misc#open#file(path, ...) " {{{1
@@ -43,7 +43,7 @@ function! xolox#misc#open#file(path, ...) " {{{1
       endif
     endfor
   endif
-  throw printf(s:enoimpl, s:script, 'xolox#misc#open#file')
+  throw printf(s:enoimpl, g:xolox#misc#version, 'xolox#misc#open#file')
 endfunction
 
 function! xolox#misc#open#url(url) " {{{1

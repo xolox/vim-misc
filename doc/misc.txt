@@ -137,7 +137,7 @@ from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
 The documentation of the 67 functions below was extracted from 15 Vim scripts
-on June 3, 2013 at 21:53.
+on June 19, 2013 at 20:20.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
