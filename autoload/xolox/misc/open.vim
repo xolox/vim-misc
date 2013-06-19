@@ -7,11 +7,11 @@
 let s:enoimpl = "vim-misc %s: %s() hasn't been implemented for your platform! If you have suggestions, please get in touch at https://github.com/xolox/vim-misc/issues"
 let s:handlers = ['gnome-open', 'kde-open', 'exo-open', 'xdg-open']
 
-function! xolox#misc#open#file(path, ...) " {{{1
-  " Given a pathname as the first argument, this opens the file with the
-  " program associated with the file type. So for example a text file might
-  " open in Vim, an `*.html` file would probably open in your web browser and
-  " a media file would open in a media player.
+function! xolox#misc#open#file(location, ...) " {{{1
+  " Given a pathname or URL as the first argument, this opens the file with
+  " the program associated with the file type. So for example a text file
+  " might open in Vim, an `*.html` file would probably open in your web
+  " browser and a media file would open in a media player.
   "
   " This should work on Windows, Mac OS X and most Linux distributions. If
   " this fails to find a file association, you can pass one or more external
@@ -23,21 +23,21 @@ function! xolox#misc#open#file(path, ...) " {{{1
   " then.
   if xolox#misc#os#is_win()
     try
-      call xolox#shell#open_with_windows_shell(a:path)
+      call xolox#shell#open_with_windows_shell(a:location)
     catch /^Vim\%((\a\+)\)\=:E117/
       let command = '!start CMD /C START "" %s'
-      silent execute printf(command, xolox#misc#escape#shell(a:path))
+      silent execute printf(command, xolox#misc#escape#shell(a:location))
     endtry
     return
   elseif has('macunix')
-    let cmd = 'open ' . shellescape(a:path) . ' 2>&1'
+    let cmd = 'open ' . shellescape(a:location) . ' 2>&1'
     call s:handle_error(cmd, system(cmd))
     return
   else
     for handler in s:handlers + a:000
       if executable(handler)
-        call xolox#misc#msg#debug("vim-misc %s: Using '%s' to open '%s'.", g:xolox#misc#version, handler, a:path)
-        let cmd = shellescape(handler) . ' ' . shellescape(a:path) . ' 2>&1'
+        call xolox#misc#msg#debug("vim-misc %s: Using '%s' to open '%s'.", g:xolox#misc#version, handler, a:location)
+        let cmd = shellescape(handler) . ' ' . shellescape(a:location) . ' 2>&1'
         call s:handle_error(cmd, system(cmd))
         return
       endif
