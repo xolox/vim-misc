@@ -1,7 +1,7 @@
 " Tests for the miscellaneous Vim scripts.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 2, 2013
+" Last Change: June 22, 2013
 " URL: http://peterodding.com/code/vim/misc/
 "
 " The Vim auto-load script `autoload/xolox/misc/tests.vim` contains the
@@ -17,6 +17,7 @@ function! xolox#misc#tests#run() " {{{1
   call s:test_list_handling()
   call s:test_option_handling()
   call s:test_command_execution()
+  call s:test_version_handling()
   " Report a short summary to the user.
   call xolox#misc#test#summarize()
 endfunction
@@ -227,4 +228,29 @@ function! xolox#misc#tests#asynchronous_command_execution() " {{{2
   endwhile
   call xolox#misc#test#assert_true(filereadable(tempfile))
   call xolox#misc#test#assert_equals([expected_value], readfile(tempfile))
+endfunction
+
+" Tests for autoload/xolox/misc/version.vim {{{1
+
+function! s:test_version_handling()
+  call xolox#misc#test#wrap('xolox#misc#tests#version_string_parsing')
+  call xolox#misc#test#wrap('xolox#misc#tests#version_string_comparison')
+endfunction
+
+function! xolox#misc#tests#version_string_parsing() " {{{2
+  " Test parsing of version strings with `xolox#misc#version#parse()`.
+  call xolox#misc#test#assert_equals([1], xolox#misc#version#parse('1'))
+  call xolox#misc#test#assert_equals([1, 5], xolox#misc#version#parse('1.5'))
+  call xolox#misc#test#assert_equals([1, 22, 3333, 44444, 55555], xolox#misc#version#parse('1.22.3333.44444.55555'))
+  call xolox#misc#test#assert_equals([1, 5], xolox#misc#version#parse('1x.5y'))
+endfunction
+
+function! xolox#misc#tests#version_string_comparison() " {{{2
+  " Test comparison of version strings with `xolox#misc#version#at_least()`.
+  call xolox#misc#test#assert_true(xolox#misc#version#at_least('1', '1'))
+  call xolox#misc#test#assert_true(!xolox#misc#version#at_least('1', '0'))
+  call xolox#misc#test#assert_true(xolox#misc#version#at_least('1', '2'))
+  call xolox#misc#test#assert_true(xolox#misc#version#at_least('1.2.3', '1.2.3'))
+  call xolox#misc#test#assert_true(!xolox#misc#version#at_least('1.2.3', '1.2'))
+  call xolox#misc#test#assert_true(xolox#misc#version#at_least('1.2.3', '1.2.4'))
 endfunction

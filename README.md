@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 68 functions below was extracted from
-15 Vim scripts on June 19, 2013 at 22:53.
+The documentation of the 72 functions below was extracted from
+16 Vim scripts on June 22, 2013 at 02:08.
 
 ### Handling of special buffers
 
@@ -570,6 +570,14 @@ Test synchronous command execution without raising of errors with
 Test basic functionality of asynchronous command execution with
 `xolox#misc#os#exec()`.
 
+#### The `xolox#misc#tests#version_string_parsing()` function
+
+Test parsing of version strings with `xolox#misc#version#parse()`.
+
+#### The `xolox#misc#tests#version_string_comparison()` function
+
+Test comparison of version strings with `xolox#misc#version#at_least()`.
+
 ### Timing of long during operations
 
 #### The `xolox#misc#timer#start()` function
@@ -597,6 +605,17 @@ Show a formatted message to the user. This function has the same argument
 handling as Vim's [printf()] [printf] function with one difference: At the
 point where you want the elapsed time to be embedded, you write `%s` and
 you pass the list returned by `xolox#misc#timer#start()` as an argument.
+
+### Version string handling
+
+#### The `xolox#misc#version#parse()` function
+
+Convert a version string to a list of integers.
+
+#### The `xolox#misc#version#at_least()` function
+
+Check whether the second version string is equal to or greater than the
+first version string. Returns 1 (true) when it is, 0 (false) otherwise.
 
 <!-- End of generated documentation -->
 

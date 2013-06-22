@@ -86,10 +86,15 @@ function
    14. The |xolox#misc#tests#synchronous_command_execution_without_raising_errors()|
 function
    15. The |xolox#misc#tests#asynchronous_command_execution()| function
+   16. The |xolox#misc#tests#version_string_parsing()| function
+   17. The |xolox#misc#tests#version_string_comparison()| function
   14. Timing of long during operations  |misc-timing-of-long-during-operations|
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
    3. The |xolox#misc#timer#force()| function
+  15. Version string handling                    |misc-version-string-handling|
+   1. The |xolox#misc#version#parse()| function
+   2. The |xolox#misc#version#at_least()| function
  4. Contact                                                      |misc-contact|
  5. License                                                      |misc-license|
  6. References                                                |misc-references|
@@ -137,8 +142,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 68 functions below was extracted from 15 Vim scripts
-on June 19, 2013 at 22:53.
+The documentation of the 72 functions below was extracted from 16 Vim scripts
+on June 22, 2013 at 02:08.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -724,6 +729,16 @@ Test basic functionality of asynchronous command execution with
 |xolox#misc#os#exec()|.
 
 -------------------------------------------------------------------------------
+The *xolox#misc#tests#version_string_parsing()* function
+
+Test parsing of version strings with |xolox#misc#version#parse()|.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#tests#version_string_comparison()* function
+
+Test comparison of version strings with |xolox#misc#version#at_least()|.
+
+-------------------------------------------------------------------------------
                                         *misc-timing-of-long-during-operations*
 Timing of long during operations ~
 
@@ -751,6 +766,21 @@ Show a formatted message to the user. This function has the same argument
 handling as Vim's |printf()| function with one difference: At the point where
 you want the elapsed time to be embedded, you write '%s' and you pass the list
 returned by |xolox#misc#timer#start()| as an argument.
+
+-------------------------------------------------------------------------------
+                                                 *misc-version-string-handling*
+Version string handling ~
+
+-------------------------------------------------------------------------------
+The *xolox#misc#version#parse()* function
+
+Convert a version string to a list of integers.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#version#at_least()* function
+
+Check whether the second version string is equal to or greater than the first
+version string. Returns 1 (true) when it is, 0 (false) otherwise.
 
 ===============================================================================
                                                                  *misc-contact*
