@@ -56,9 +56,12 @@ Contents ~
    11. The |xolox#misc#path#is_relative()| function
    12. The |xolox#misc#path#tempdir()| function
   11. String handling                                    |misc-string-handling|
-   1. The |xolox#misc#str#ucfirst()| function
-   2. The |xolox#misc#str#compact()| function
-   3. The |xolox#misc#str#trim()| function
+   1. The |xolox#misc#str#slug()| function
+   2. The |xolox#misc#str#ucfirst()| function
+   3. The |xolox#misc#str#compact()| function
+   4. The |xolox#misc#str#trim()| function
+   5. The |xolox#misc#str#indent()| function
+   6. The |xolox#misc#str#dedent()| function
   12. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
    1. The |xolox#misc#test#reset()| function
    2. The |xolox#misc#test#summarize()| function
@@ -86,8 +89,12 @@ function
    14. The |xolox#misc#tests#synchronous_command_execution_without_raising_errors()|
 function
    15. The |xolox#misc#tests#asynchronous_command_execution()| function
-   16. The |xolox#misc#tests#version_string_parsing()| function
-   17. The |xolox#misc#tests#version_string_comparison()| function
+   16. The |xolox#misc#tests#string_case_transformation()| function
+   17. The |xolox#misc#tests#string_whitespace_compaction()| function
+   18. The |xolox#misc#tests#string_whitespace_trimming()| function
+   19. The |xolox#misc#tests#multiline_string_dedent()| function
+   20. The |xolox#misc#tests#version_string_parsing()| function
+   21. The |xolox#misc#tests#version_string_comparison()| function
   14. Timing of long during operations  |misc-timing-of-long-during-operations|
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
@@ -142,8 +149,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 72 functions below was extracted from 16 Vim scripts
-on June 22, 2013 at 02:08.
+The documentation of the 79 functions below was extracted from 16 Vim scripts
+on June 23, 2013 at 23:13.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -561,20 +568,36 @@ Create a temporary directory and return the pathname of the directory.
 String handling ~
 
 -------------------------------------------------------------------------------
+The *xolox#misc#str#slug()* function
+
+Convert a string to a "slug" - something that can be safely used in filenames
+and URLs without worrying about quoting/escaping of special characters.
+
+-------------------------------------------------------------------------------
 The *xolox#misc#str#ucfirst()* function
 
-Uppercase the first character in a string.
+Uppercase the first character in a string (the first argument).
 
 -------------------------------------------------------------------------------
 The *xolox#misc#str#compact()* function
 
-Compact whitespace in the string given as the first argument.
+Compact whitespace in a string (the first argument).
 
 -------------------------------------------------------------------------------
 The *xolox#misc#str#trim()* function
 
-Trim all whitespace from the start and end of the string given as the first
-argument.
+Trim all whitespace from the start and end of a string (the first argument).
+
+-------------------------------------------------------------------------------
+The *xolox#misc#str#indent()* function
+
+Indent all lines in a multi-line string (the first argument) with a specific
+number of _space characters_ (the second argument, an integer).
+
+-------------------------------------------------------------------------------
+The *xolox#misc#str#dedent()* function
+
+Remove common whitespace from a multi line string.
 
 -------------------------------------------------------------------------------
                              *misc-test-runner-infrastructure-for-vim-plug-ins*
@@ -727,6 +750,26 @@ The *xolox#misc#tests#asynchronous_command_execution()* function
 
 Test basic functionality of asynchronous command execution with
 |xolox#misc#os#exec()|.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#tests#string_case_transformation()* function
+
+Test string case transformation with |xolox#misc#str#ucfirst()|.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#tests#string_whitespace_compaction()* function
+
+Test compaction of whitespace in strings with |xolox#misc#str#compact()|.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#tests#string_whitespace_trimming()* function
+
+Test trimming of whitespace in strings with |xolox#misc#str#trim()|.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#tests#multiline_string_dedent()* function
+
+Test dedenting of multi-line strings with |xolox#misc#str#dedent()|.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#tests#version_string_parsing()* function

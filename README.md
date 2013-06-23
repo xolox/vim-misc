@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 72 functions below was extracted from
-16 Vim scripts on June 22, 2013 at 02:08.
+The documentation of the 79 functions below was extracted from
+16 Vim scripts on June 23, 2013 at 23:13.
 
 ### Handling of special buffers
 
@@ -423,18 +423,33 @@ Create a temporary directory and return the pathname of the directory.
 
 ### String handling
 
+#### The `xolox#misc#str#slug()` function
+
+Convert a string to a "slug" - something that can be safely used in
+filenames and URLs without worrying about quoting/escaping of special
+characters.
+
 #### The `xolox#misc#str#ucfirst()` function
 
-Uppercase the first character in a string.
+Uppercase the first character in a string (the first argument).
 
 #### The `xolox#misc#str#compact()` function
 
-Compact whitespace in the string given as the first argument.
+Compact whitespace in a string (the first argument).
 
 #### The `xolox#misc#str#trim()` function
 
-Trim all whitespace from the start and end of the string given as the
-first argument.
+Trim all whitespace from the start and end of a string (the first
+argument).
+
+#### The `xolox#misc#str#indent()` function
+
+Indent all lines in a multi-line string (the first argument) with a
+specific number of *space characters* (the second argument, an integer).
+
+#### The `xolox#misc#str#dedent()` function
+
+Remove common whitespace from a multi line string.
 
 ### Test runner & infrastructure for Vim plug-ins
 
@@ -569,6 +584,22 @@ Test synchronous command execution without raising of errors with
 
 Test basic functionality of asynchronous command execution with
 `xolox#misc#os#exec()`.
+
+#### The `xolox#misc#tests#string_case_transformation()` function
+
+Test string case transformation with `xolox#misc#str#ucfirst()`.
+
+#### The `xolox#misc#tests#string_whitespace_compaction()` function
+
+Test compaction of whitespace in strings with `xolox#misc#str#compact()`.
+
+#### The `xolox#misc#tests#string_whitespace_trimming()` function
+
+Test trimming of whitespace in strings with `xolox#misc#str#trim()`.
+
+#### The `xolox#misc#tests#multiline_string_dedent()` function
+
+Test dedenting of multi-line strings with `xolox#misc#str#dedent()`.
 
 #### The `xolox#misc#tests#version_string_parsing()` function
 
