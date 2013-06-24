@@ -1,7 +1,7 @@
 " Operating system interfaces.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 19, 2013
+" Last Change: June 25, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
 function! xolox#misc#os#is_mac() " {{{1
@@ -182,8 +182,8 @@ function! xolox#misc#os#exec(options) " {{{1
     let result = {'command': cmd}
     if !async
       let result['exit_code'] = exit_code
-      let result['stdout'] = s:readfile(tempout)
-      let result['stderr'] = s:readfile(temperr)
+      let result['stdout'] = s:readfile(tempout, 'standard output', a:options['command'])
+      let result['stderr'] = s:readfile(temperr, 'standard error', a:options['command'])
       " If we just executed a synchronous command and the caller didn't
       " specifically ask us *not* to check the exit code of the external
       " command, we'll do so now.
@@ -215,11 +215,11 @@ function! xolox#misc#os#exec(options) " {{{1
 
 endfunction
 
-function! s:readfile(fname) " {{{1
-  " readfile() that swallows errors.
+function! s:readfile(fname, label, cmd) " {{{1
   try
     return readfile(a:fname)
   catch
+    call xolox#misc#msg#warn("vim-misc %s: Failed to read temporary file (%s) with %s of external command: %s! (external command: %s)", g:xolox#misc#version, a:fname, a:label, v:exception, a:cmd)
     return []
   endtry
 endfunction
