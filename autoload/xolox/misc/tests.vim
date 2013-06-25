@@ -1,7 +1,7 @@
 " Tests for the miscellaneous Vim scripts.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 23, 2013
+" Last Change: June , 2013
 " URL: http://peterodding.com/code/vim/misc/
 "
 " The Vim auto-load script `autoload/xolox/misc/tests.vim` contains the
@@ -90,7 +90,6 @@ function! s:test_option_handling()
   call xolox#misc#test#wrap('xolox#misc#tests#getting_configuration_options')
   call xolox#misc#test#wrap('xolox#misc#tests#splitting_of_multi_valued_options')
   call xolox#misc#test#wrap('xolox#misc#tests#joining_of_multi_valued_options')
-  call xolox#misc#test#wrap('xolox#misc#tests#evaluation_of_tags_option')
 endfunction
 
 function! xolox#misc#tests#getting_configuration_options() " {{{2
@@ -131,34 +130,6 @@ function! xolox#misc#tests#joining_of_multi_valued_options() " {{{2
   call xolox#misc#test#assert_equals('just one value', xolox#misc#option#join(['just one value']))
   call xolox#misc#test#assert_equals('value 1,value 2', xolox#misc#option#join(['value 1', 'value 2']))
   call xolox#misc#test#assert_equals('value 1,value 2,tricky\,value', xolox#misc#option#join(['value 1', 'value 2', 'tricky,value']))
-endfunction
-
-function! xolox#misc#tests#evaluation_of_tags_option() " {{{2
-  " Test evaluation of Vim's ['tags'] [] option. We don't test `~/.tags` style
-  " patterns because `xolox#misc#option#eval_tags()` doesn't support those.
-  " Depending on your perspective this is not a bug, because the ['tags'] []
-  " option gets special treatment in Vim anyway:
-  "
-  "   :set tags=~/.tags
-  "     tags=~/.tags
-  "   :echo &tags
-  "     /home/peter/.tags
-  "
-  " So at the point where `xolox#misc#option#eval_tags()` receives the value
-  " of ['tags'] [], it has already been expanded by Vim.
-  "
-  " ['tags']: http://vimdoc.sourceforge.net/htmldoc/options.html#'tags'
-  let buffer_directory = fnamemodify(bufname('%'), ':p:h')
-  call xolox#misc#test#assert_equals(
-        \ [xolox#misc#path#merge(buffer_directory, '.tags')],
-        \ xolox#misc#option#eval_tags('./.tags'))
-  call xolox#misc#test#assert_equals(
-        \ [xolox#misc#path#merge(buffer_directory, '.tags'),
-        \  xolox#misc#path#merge(buffer_directory, '.more-tags')],
-        \ xolox#misc#option#eval_tags('./.tags,./.more-tags'))
-  call xolox#misc#test#assert_equals(
-        \ [xolox#misc#path#merge(buffer_directory, '.tags')],
-        \ xolox#misc#option#eval_tags('./.tags;'))
 endfunction
 
 " Tests for autoload/xolox/misc/os.vim {{{1

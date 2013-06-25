@@ -81,20 +81,19 @@ Contents ~
    7. The |xolox#misc#tests#getting_configuration_options()| function
    8. The |xolox#misc#tests#splitting_of_multi_valued_options()| function
    9. The |xolox#misc#tests#joining_of_multi_valued_options()| function
-   10. The |xolox#misc#tests#evaluation_of_tags_option()| function
-   11. The |xolox#misc#tests#finding_vim_on_the_search_path()| function
-   12. The |xolox#misc#tests#synchronous_command_execution()| function
-   13. The |xolox#misc#tests#synchronous_command_execution_with_raising_of_errors()|
+   10. The |xolox#misc#tests#finding_vim_on_the_search_path()| function
+   11. The |xolox#misc#tests#synchronous_command_execution()| function
+   12. The |xolox#misc#tests#synchronous_command_execution_with_raising_of_errors()|
 function
-   14. The |xolox#misc#tests#synchronous_command_execution_without_raising_errors()|
+   13. The |xolox#misc#tests#synchronous_command_execution_without_raising_errors()|
 function
-   15. The |xolox#misc#tests#asynchronous_command_execution()| function
-   16. The |xolox#misc#tests#string_case_transformation()| function
-   17. The |xolox#misc#tests#string_whitespace_compaction()| function
-   18. The |xolox#misc#tests#string_whitespace_trimming()| function
-   19. The |xolox#misc#tests#multiline_string_dedent()| function
-   20. The |xolox#misc#tests#version_string_parsing()| function
-   21. The |xolox#misc#tests#version_string_comparison()| function
+   14. The |xolox#misc#tests#asynchronous_command_execution()| function
+   15. The |xolox#misc#tests#string_case_transformation()| function
+   16. The |xolox#misc#tests#string_whitespace_compaction()| function
+   17. The |xolox#misc#tests#string_whitespace_trimming()| function
+   18. The |xolox#misc#tests#multiline_string_dedent()| function
+   19. The |xolox#misc#tests#version_string_parsing()| function
+   20. The |xolox#misc#tests#version_string_comparison()| function
   14. Timing of long during operations  |misc-timing-of-long-during-operations|
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
@@ -149,8 +148,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 79 functions below was extracted from 15 Vim scripts
-on June 25, 2013 at 00:11.
+The documentation of the 78 functions below was extracted from 15 Vim scripts
+on June 25, 2013 at 23:45.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -705,19 +704,6 @@ Test splitting of multi-valued Vim options with |xolox#misc#option#split()|.
 The *xolox#misc#tests#joining_of_multi_valued_options()* function
 
 Test joining of multi-valued Vim options with |xolox#misc#option#join()|.
-
--------------------------------------------------------------------------------
-The *xolox#misc#tests#evaluation_of_tags_option()* function
-
-Test evaluation of Vim's |'tags'| option. We don't test '~/.tags' style
-patterns because |xolox#misc#option#eval_tags()| doesn't support those.
-Depending on your perspective this is not a bug, because the |'tags'| option
-gets special treatment in Vim anyway:
-
-:set tags=~/.tags tags=~/.tags :echo &tags /home/peter/.tags
-
-So at the point where |xolox#misc#option#eval_tags()| receives the value of
-|'tags'|, it has already been expanded by Vim.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#tests#finding_vim_on_the_search_path()* function

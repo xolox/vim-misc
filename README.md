@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 79 functions below was extracted from
-15 Vim scripts on June 25, 2013 at 00:11.
+The documentation of the 78 functions below was extracted from
+15 Vim scripts on June 25, 2013 at 23:45.
 
 ### Handling of special buffers
 
@@ -540,23 +540,6 @@ Test splitting of multi-valued Vim options with
 #### The `xolox#misc#tests#joining_of_multi_valued_options()` function
 
 Test joining of multi-valued Vim options with `xolox#misc#option#join()`.
-
-#### The `xolox#misc#tests#evaluation_of_tags_option()` function
-
-Test evaluation of Vim's ['tags'] [] option. We don't test `~/.tags` style
-patterns because `xolox#misc#option#eval_tags()` doesn't support those.
-Depending on your perspective this is not a bug, because the ['tags'] []
-option gets special treatment in Vim anyway:
-
-  :set tags=~/.tags
-    tags=~/.tags
-  :echo &tags
-    /home/peter/.tags
-
-So at the point where `xolox#misc#option#eval_tags()` receives the value
-of ['tags'] [], it has already been expanded by Vim.
-
-['tags']: http://vimdoc.sourceforge.net/htmldoc/options.html#'tags'
 
 #### The `xolox#misc#tests#finding_vim_on_the_search_path()` function
 
