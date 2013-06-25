@@ -113,8 +113,24 @@ function! xolox#misc#os#exec(options) " {{{1
     let cmd = a:options['command']
     let async = get(a:options, 'async', 0)
 
+    " We need to know in a couple of places whether we are on Windows.
+    let is_win = xolox#misc#os#is_win()
+
+    " Use vim-shell so we don't pop up a console window on Windows? If the
+    " caller specifically asks us *not* to use vim-shell, we'll respect that
+    " choice; this is very useful for automated tests :-).
+    if get(a:options, 'use_dll', 1) == 0
+      let use_dll = 0
+    else
+      let use_dll = xolox#misc#os#can_use_dll()
+    endif
+
+    " Decide whether to redirect the standard output and standard error
+    " streams to temporary files.
+    let redirect_output = !async && (use_dll || !is_win)
+
     " Write the input for the external command to a temporary file?
-    if has_key(a:options, 'stdin')
+    if has_key(a:options, 'stdin') && use_dll
       let tempin = tempname()
       if type(a:options['stdin']) == type([])
         let lines = a:options['stdin']
@@ -125,56 +141,57 @@ function! xolox#misc#os#exec(options) " {{{1
       let cmd .= ' < ' . xolox#misc#escape#shell(tempin)
     endif
 
-    " Redirect the standard output and standard error streams of the external
-    " process to temporary files? (only in synchronous mode, which is the
-    " default).
-    if !async
+    " Redirect the standard output and/or standard error streams of the
+    " external process to temporary files? (only in synchronous mode)
+    if redirect_output
       let tempout = tempname()
       let temperr = tempname()
       let cmd = printf('(%s) 1>%s 2>%s', cmd, xolox#misc#escape#shell(tempout), xolox#misc#escape#shell(temperr))
     endif
 
-    " If A) we're on Windows, B) the vim-shell plug-in is installed and C) the
-    " compiled DLL works, we'll use that because it's the most user friendly
-    " method. If the plug-in is not installed Vim will raise the exception
-    " "E117: Unknown function" which is caught and handled below.
-    try
-      if xolox#shell#can_use_dll()
-        " Let the user know what's happening (in case they're interested).
-        call xolox#misc#msg#debug("vim-misc %s: Executing external command using compiled DLL: %s", g:xolox#misc#version, cmd)
-        let exit_code = xolox#shell#execute_with_dll(cmd, async)
-      endif
-    catch /^Vim\%((\a\+)\)\=:E117/
-      call xolox#misc#msg#debug("vim-misc %s: The vim-shell plug-in is not installed, falling back to system() function.", g:xolox#misc#version)
-    endtry
-
-    " If we cannot use the DLL, we fall back to the default and generic
-    " implementation using Vim's system() function.
-    if !exists('exit_code')
+    " Use vim-shell or system() to execute the external command?
+    if use_dll
+      call xolox#misc#msg#debug("vim-misc %s: Executing external command using compiled DLL: %s", g:xolox#misc#version, cmd)
+      let exit_code = xolox#shell#execute_with_dll(cmd, async)
+    else
 
       " Enable asynchronous mode (very platform specific).
       if async
-        if xolox#misc#os#is_win()
-          let cmd = 'start /b ' . cmd
+        if is_win
+          let cmd = printf('start /b %s', cmd)
         elseif has('unix')
-          let cmd = '(' . cmd . ') &'
+          let cmd = printf('(%s) &', cmd)
         else
-          call xolox#misc#msg#warn("vim-misc %s: I don't know how to run commands asynchronously on your platform! Falling back to synchronous mode.", g:xolox#misc#version)
+          call xolox#misc#msg#warn("vim-misc %s: I don't know how to execute the command %s asynchronously on your platform! Falling back to synchronous mode...", g:xolox#misc#version, cmd)
         endif
       endif
 
-      " Execute the command line using 'sh' instead of the default shell,
-      " because we assume that standard output and standard error can be
-      " redirected separately, but (t)csh does not support this.
+      " On UNIX we explicitly execute the command line using 'sh' instead of
+      " the default shell, because we assume that standard output and standard
+      " error can be redirected separately, but (t)csh does not support this
+      " (and it might be the default shell).
       if has('unix')
         call xolox#misc#msg#debug("vim-misc %s: Generated shell expression: %s", g:xolox#misc#version, cmd)
         let cmd = printf('sh -c %s', xolox#misc#escape#shell(cmd))
       endif
 
       " Let the user know what's happening (in case they're interested).
-      call xolox#misc#msg#debug("vim-misc %s: Executing external command using system() function: %s", g:xolox#misc#version, cmd)
-      call system(cmd)
-      let exit_code = v:shell_error
+      if async && is_win
+        call xolox#misc#msg#debug("vim-misc %s: Executing external command using !start command: %s", g:xolox#misc#version, cmd)
+        silent execute '!' . cmd
+      else
+        call xolox#misc#msg#debug("vim-misc %s: Executing external command using system() function: %s", g:xolox#misc#version, cmd)
+        let arguments = [cmd]
+        if has_key(a:options, 'stdin')
+          if type(a:options['stdin']) == type([])
+            call add(arguments, join(a:options['stdin'], "\n"))
+          else
+            call add(arguments, a:options['stdin'])
+          endif
+        endif
+        let stdout = call('system', arguments)
+        let exit_code = v:shell_error
+      endif
 
     endif
 
@@ -182,11 +199,24 @@ function! xolox#misc#os#exec(options) " {{{1
     let result = {'command': cmd}
     if !async
       let result['exit_code'] = exit_code
-      let result['stdout'] = s:readfile(tempout, 'standard output', a:options['command'])
-      let result['stderr'] = s:readfile(temperr, 'standard error', a:options['command'])
+      " Get the standard output of the command.
+      if redirect_output
+        let result['stdout'] = s:readfile(tempout, 'standard output', a:options['command'])
+      elseif exists('stdout')
+        let result['stdout'] = split(stdout, "\n")
+      else
+        let result['stdout'] = []
+      endif
+      " Get the standard error of the command.
+      if exists('temperr')
+        let result['stderr'] = s:readfile(temperr, 'standard error', a:options['command'])
+      else
+        let result['stderr'] = []
+      endif
       " If we just executed a synchronous command and the caller didn't
       " specifically ask us *not* to check the exit code of the external
-      " command, we'll do so now.
+      " command, we'll do so now. The idea here is that it should be easy
+      " to 'do the right thing'.
       if get(a:options, 'check', 1) && exit_code != 0
         " Prepare an error message with enough details so the user can investigate.
         let msg = printf("vim-misc %s: External command failed with exit code %d!", g:xolox#misc#version, result['exit_code'])
@@ -213,6 +243,18 @@ function! xolox#misc#os#exec(options) " {{{1
     endfor
   endtry
 
+endfunction
+
+function! xolox#misc#os#can_use_dll() " {{{1
+  " If a) we're on Microsoft Windows, b) the vim-shell plug-in is installed
+  " and c) the compiled DLL included in vim-shell works, we can use the
+  " vim-shell plug-in to execute external commands! Returns 1 (true)
+  " if we can use the DLL, 0 (false) otherwise.
+  try
+    return xolox#shell#can_use_dll()
+  catch /^Vim\%((\a\+)\)\=:E117/
+    return 0
+  endtry
 endfunction
 
 function! s:readfile(fname, label, cmd) " {{{1

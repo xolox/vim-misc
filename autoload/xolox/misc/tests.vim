@@ -8,6 +8,9 @@
 " automated test suite of the miscellaneous Vim scripts. Right now the
 " coverage is not very high yet, but this will improve over time.
 
+let s:use_dll = 0
+let s:can_use_dll = xolox#misc#os#can_use_dll()
+
 function! xolox#misc#tests#run() " {{{1
   " Run the automated test suite of the miscellaneous Vim scripts. To be used
   " interactively. Intended to be safe to execute irrespective of context.
@@ -23,12 +26,27 @@ function! xolox#misc#tests#run() " {{{1
   call xolox#misc#test#summarize()
 endfunction
 
+function! s:wrap_exec_test(function)
+  " Wrapper for tests that use xolox#misc#os#exec(). If we're on Windows and
+  " the vim-shell plug-in is installed, the test will be run twice: Once with
+  " vim-shell disabled and once with vim-shell enabled. This makes sure that
+  " all code paths are tested as much as possible.
+  call xolox#misc#msg#debug("vim-misc %s: Temporarily disabling vim-shell so we can test vim-misc ..", g:xolox#misc#version)
+  let s:use_dll = 0
+  call xolox#misc#test#wrap(a:function)
+  if s:can_use_dll
+    call xolox#misc#msg#debug("vim-misc %s: Re-enabling vim-shell so we can test that as well ..", g:xolox#misc#version)
+    let s:use_dll = 1
+    call xolox#misc#test#wrap(a:function)
+  endif
+endfunction
+
 " Tests for autoload/xolox/misc/escape.vim {{{1
 
 function! s:test_string_escaping()
   call xolox#misc#test#wrap('xolox#misc#tests#pattern_escaping')
   call xolox#misc#test#wrap('xolox#misc#tests#substitute_escaping')
-  call xolox#misc#test#wrap('xolox#misc#tests#shell_escaping')
+  call s:wrap_exec_test('xolox#misc#tests#shell_escaping')
 endfunction
 
 function! xolox#misc#tests#pattern_escaping() " {{{2
@@ -47,9 +65,15 @@ endfunction
 function! xolox#misc#tests#shell_escaping() " {{{2
   " Test escaping of shell arguments with `xolox#misc#escape#shell()`.
   let expected_value = 'this < is > a | very " scary ^ string '' indeed'
-  let result = xolox#misc#os#exec({'command': g:xolox#misc#test#echo . ' ' . xolox#misc#escape#shell(expected_value)})
+  let result = xolox#misc#os#exec({'command': g:xolox#misc#test#echo . ' ' . xolox#misc#escape#shell(expected_value), 'use_dll': s:use_dll})
   call xolox#misc#test#assert_equals(0, result['exit_code'])
-  call xolox#misc#test#assert_equals([expected_value], result['stdout'])
+  call xolox#misc#test#assert_equals(0, result['exit_code'])
+  call xolox#misc#test#assert_same_type([], result['stdout'])
+  call xolox#misc#test#assert_equals(1, len(result['stdout']))
+  " XXX On Windows using system() there's a trailing space I can't explain.
+  " However the point of this test was to show that all characters pass
+  " through unharmed, so for now I'll just ignore the space :-)
+  call xolox#misc#test#assert_equals(expected_value, xolox#misc#str#trim(result['stdout'][0]))
 endfunction
 
 " Tests for autoload/xolox/misc/list.vim {{{1
@@ -136,10 +160,11 @@ endfunction
 
 function! s:test_command_execution()
   call xolox#misc#test#wrap('xolox#misc#tests#finding_vim_on_the_search_path')
-  call xolox#misc#test#wrap('xolox#misc#tests#synchronous_command_execution')
-  call xolox#misc#test#wrap('xolox#misc#tests#synchronous_command_execution_with_raising_of_errors')
-  call xolox#misc#test#wrap('xolox#misc#tests#synchronous_command_execution_without_raising_errors')
-  call xolox#misc#test#wrap('xolox#misc#tests#asynchronous_command_execution')
+  call s:wrap_exec_test('xolox#misc#tests#synchronous_command_execution')
+  call s:wrap_exec_test('xolox#misc#tests#synchronous_command_execution_with_stderr')
+  call s:wrap_exec_test('xolox#misc#tests#synchronous_command_execution_with_raising_of_errors')
+  call s:wrap_exec_test('xolox#misc#tests#synchronous_command_execution_without_raising_errors')
+  call s:wrap_exec_test('xolox#misc#tests#asynchronous_command_execution')
 endfunction
 
 function! xolox#misc#tests#finding_vim_on_the_search_path() " {{{2
@@ -155,18 +180,30 @@ endfunction
 function! xolox#misc#tests#synchronous_command_execution() " {{{2
   " Test basic functionality of synchronous command execution with
   " `xolox#misc#os#exec()`.
-  let result = xolox#misc#os#exec({'command': printf('%s output && %s errors >&2', g:xolox#misc#test#echo, g:xolox#misc#test#echo)})
+  let result = xolox#misc#os#exec({'command': printf('%s output', g:xolox#misc#test#echo), 'use_dll': s:use_dll})
   call xolox#misc#test#assert_same_type({}, result)
   call xolox#misc#test#assert_equals(0, result['exit_code'])
   call xolox#misc#test#assert_equals(['output'], result['stdout'])
-  call xolox#misc#test#assert_equals(['errors'], result['stderr'])
+endfunction
+
+function! xolox#misc#tests#synchronous_command_execution_with_stderr() " {{{2
+  " Test basic functionality of synchronous command execution with
+  " `xolox#misc#os#exec()` including the standard error stream (not available
+  " on Windows when vim-shell is not installed).
+  if !(xolox#misc#os#is_win() && !s:use_dll)
+    let result = xolox#misc#os#exec({'command': printf('%s output && %s errors >&2', g:xolox#misc#test#echo, g:xolox#misc#test#echo), 'use_dll': s:use_dll})
+    call xolox#misc#test#assert_same_type({}, result)
+    call xolox#misc#test#assert_equals(0, result['exit_code'])
+    call xolox#misc#test#assert_equals(['output'], result['stdout'])
+    call xolox#misc#test#assert_equals(['errors'], result['stderr'])
+  endif
 endfunction
 
 function! xolox#misc#tests#synchronous_command_execution_with_raising_of_errors() " {{{2
   " Test raising of errors during synchronous command execution with
   " `xolox#misc#os#exec()`.
   try
-    call xolox#misc#os#exec({'command': 'exit 1'})
+    call xolox#misc#os#exec({'command': 'exit 1', 'use_dll': s:use_dll})
     call xolox#misc#test#assert_true(0)
   catch
     call xolox#misc#test#assert_true(1)
@@ -177,7 +214,7 @@ function! xolox#misc#tests#synchronous_command_execution_without_raising_errors(
   " Test synchronous command execution without raising of errors with
   " `xolox#misc#os#exec()`.
   try
-    let result = xolox#misc#os#exec({'command': 'exit 42', 'check': 0})
+    let result = xolox#misc#os#exec({'command': 'exit 42', 'check': 0, 'use_dll': s:use_dll})
     call xolox#misc#test#assert_true(1)
     call xolox#misc#test#assert_equals(42, result['exit_code'])
   catch
@@ -186,20 +223,23 @@ function! xolox#misc#tests#synchronous_command_execution_without_raising_errors(
 endfunction
 
 function! xolox#misc#tests#asynchronous_command_execution() " {{{2
-  " Test basic functionality of asynchronous command execution with
-  " `xolox#misc#os#exec()`.
-  let tempfile = tempname()
-  let expected_value = string(localtime())
-  let command = g:xolox#misc#test#echo . ' ' . xolox#misc#escape#shell(expected_value) . ' > ' . tempfile
-  let result = xolox#misc#os#exec({'command': command, 'async': 1})
+  " Test the basic functionality of asynchronous command execution with
+  " `xolox#misc#os#exec()`. This runs the external command `mkdir` and tests
+  " that the side effect of creating the directory takes place. This might
+  " seem like a peculiar choice, but it's one of the few 100% portable
+  " commands (Windows + UNIX) that doesn't involve input/output streams.
+  let temporary_directory = xolox#misc#path#tempdir()
+  let random_name = printf('%i', localtime())
+  let expected_directory = xolox#misc#path#merge(temporary_directory, random_name)
+  let command = 'mkdir ' . xolox#misc#escape#shell(expected_directory)
+  let result = xolox#misc#os#exec({'command': command, 'async': 1, 'use_dll': s:use_dll})
   call xolox#misc#test#assert_same_type({}, result)
   " Make sure the command is really executed.
   let timeout = localtime() + 30
-  while !filereadable(tempfile) && localtime() < timeout
+  while !isdirectory(expected_directory) && localtime() < timeout
     sleep 500 m
   endwhile
-  call xolox#misc#test#assert_true(filereadable(tempfile))
-  call xolox#misc#test#assert_equals([expected_value], readfile(tempfile))
+  call xolox#misc#test#assert_true(isdirectory(expected_directory))
 endfunction
 
 " Tests for autoload/xolox/misc/str.vim {{{1

@@ -42,6 +42,7 @@ Contents ~
    2. The |xolox#misc#os#is_win()| function
    3. The |xolox#misc#os#find_vim()| function
    4. The |xolox#misc#os#exec()| function
+   5. The |xolox#misc#os#can_use_dll()| function
   10. Pathname manipulation functions    |misc-pathname-manipulation-functions|
    1. The |xolox#misc#path#which()| function
    2. The |xolox#misc#path#split()| function
@@ -83,17 +84,18 @@ Contents ~
    9. The |xolox#misc#tests#joining_of_multi_valued_options()| function
    10. The |xolox#misc#tests#finding_vim_on_the_search_path()| function
    11. The |xolox#misc#tests#synchronous_command_execution()| function
-   12. The |xolox#misc#tests#synchronous_command_execution_with_raising_of_errors()|
+   12. The |xolox#misc#tests#synchronous_command_execution_with_stderr()| function
+   13. The |xolox#misc#tests#synchronous_command_execution_with_raising_of_errors()|
 function
-   13. The |xolox#misc#tests#synchronous_command_execution_without_raising_errors()|
+   14. The |xolox#misc#tests#synchronous_command_execution_without_raising_errors()|
 function
-   14. The |xolox#misc#tests#asynchronous_command_execution()| function
-   15. The |xolox#misc#tests#string_case_transformation()| function
-   16. The |xolox#misc#tests#string_whitespace_compaction()| function
-   17. The |xolox#misc#tests#string_whitespace_trimming()| function
-   18. The |xolox#misc#tests#multiline_string_dedent()| function
-   19. The |xolox#misc#tests#version_string_parsing()| function
-   20. The |xolox#misc#tests#version_string_comparison()| function
+   15. The |xolox#misc#tests#asynchronous_command_execution()| function
+   16. The |xolox#misc#tests#string_case_transformation()| function
+   17. The |xolox#misc#tests#string_whitespace_compaction()| function
+   18. The |xolox#misc#tests#string_whitespace_trimming()| function
+   19. The |xolox#misc#tests#multiline_string_dedent()| function
+   20. The |xolox#misc#tests#version_string_parsing()| function
+   21. The |xolox#misc#tests#version_string_comparison()| function
   14. Timing of long during operations  |misc-timing-of-long-during-operations|
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
@@ -148,8 +150,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 78 functions below was extracted from 15 Vim scripts
-on June 25, 2013 at 23:45.
+The documentation of the 80 functions below was extracted from 15 Vim scripts
+on June 26, 2013 at 00:09.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -467,6 +469,14 @@ Returns a dictionary with one or more of the following key/value pairs:
   standard error stream (as a list of strings, one for each line)
 
 -------------------------------------------------------------------------------
+The *xolox#misc#os#can_use_dll()* function
+
+If a) we're on Microsoft Windows, b) the vim-shell plug-in is installed and c)
+the compiled DLL included in vim-shell works, we can use the vim-shell plug-in
+to execute external commands! Returns 1 (true) if we can use the DLL, 0 (false)
+otherwise.
+
+-------------------------------------------------------------------------------
                                          *misc-pathname-manipulation-functions*
 Pathname manipulation functions ~
 
@@ -718,6 +728,13 @@ Test basic functionality of synchronous command execution with
 |xolox#misc#os#exec()|.
 
 -------------------------------------------------------------------------------
+The *xolox#misc#tests#synchronous_command_execution_with_stderr()* function
+
+Test basic functionality of synchronous command execution with
+|xolox#misc#os#exec()| including the standard error stream (not available on
+Windows when vim-shell is not installed).
+
+-------------------------------------------------------------------------------
 The *xolox#misc#tests#synchronous_command_execution_with_raising_of_errors()*
 function
 
@@ -734,8 +751,11 @@ Test synchronous command execution without raising of errors with
 -------------------------------------------------------------------------------
 The *xolox#misc#tests#asynchronous_command_execution()* function
 
-Test basic functionality of asynchronous command execution with
-|xolox#misc#os#exec()|.
+Test the basic functionality of asynchronous command execution with
+|xolox#misc#os#exec()|. This runs the external command 'mkdir' and tests that
+the side effect of creating the directory takes place. This might seem like a
+peculiar choice, but it's one of the few 100% portable commands (Windows +
+UNIX) that doesn't involve input/output streams.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#tests#string_case_transformation()* function
