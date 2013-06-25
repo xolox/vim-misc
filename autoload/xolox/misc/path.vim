@@ -1,7 +1,7 @@
 " Pathname manipulation functions.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 19, 2013
+" Last Change: June 25, 2013
 " URL: http://peterodding.com/code/vim/misc/
 
 let s:windows_compatible = xolox#misc#os#is_win()
@@ -253,7 +253,7 @@ function! xolox#misc#path#tempdir() " {{{1
     try
       call mkdir(directory, '', 0700)
       return directory
-    catch /\<E739\>/
+    catch /^Vim\%((\a\+)\)\=:E739/
       " Keep looking for a non-existing directory.
     endtry
     let s:tempdir_counter += 1
