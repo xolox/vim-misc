@@ -1,7 +1,7 @@
 " Operating system interfaces.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 25, 2013
+" Last Change: June , 2013
 " URL: http://peterodding.com/code/vim/misc/
 
 function! xolox#misc#os#is_mac() " {{{1
@@ -250,11 +250,13 @@ function! xolox#misc#os#can_use_dll() " {{{1
   " and c) the compiled DLL included in vim-shell works, we can use the
   " vim-shell plug-in to execute external commands! Returns 1 (true)
   " if we can use the DLL, 0 (false) otherwise.
+  let can_use_dll = 0
   try
-    return xolox#shell#can_use_dll()
+    let can_use_dll = xolox#shell#can_use_dll()
   catch /^Vim\%((\a\+)\)\=:E117/
-    return 0
+    " Silence E117.
   endtry
+  return can_use_dll
 endfunction
 
 function! s:readfile(fname, label, cmd) " {{{1
