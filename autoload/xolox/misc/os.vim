@@ -16,7 +16,7 @@ function! xolox#misc#os#is_mac() " {{{1
     if has('mac') || has('macunix') || has('gui_mac')
       " If Vim's feature list indicates we are on Mac OS X, we have our answer :-).
       let s:is_mac = 1
-    else
+    elseif !xolox#misc#os#is_win()
       " Otherwise we check the output of `uname' to avoid false negatives.
       let result = xolox#misc#os#exec({'command': 'uname', 'check': 0})
       if result['exit_code'] == 0 && get(result['stdout'], 0, '') == 'Darwin'

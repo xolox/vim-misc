@@ -38,7 +38,7 @@ from the source code of the miscellaneous scripts using the Python module
 <!-- Start of generated documentation -->
 
 The documentation of the 80 functions below was extracted from
-15 Vim scripts on June 26, 2013 at 10:55.
+15 Vim scripts on July 20, 2013 at 10:41.
 
 ### Handling of special buffers
 
