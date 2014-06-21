@@ -152,7 +152,7 @@ from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
 The documentation of the 81 functions below was extracted from 15 Vim scripts
-on June 21, 2014 at 20:54.
+on June 22, 2014 at 00:52.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -844,16 +844,16 @@ version string. Returns 1 (true) when it is, 0 (false) otherwise.
                                                                  *misc-contact*
 Contact ~
 
-If you have questions, bug reports, suggestions, etc. the author can be
-contacted at peter@peterodding.com. The latest version is available at
-http://peterodding.com/code/vim/misc and http://github.com/xolox/vim-misc. If
-you like the script please vote for it on Vim Online [10].
+If you have questions, bug reports, suggestions, etc. please open an issue or
+pull request on GitHub [10]. Download links and documentation can be found on
+the plug-in's homepage [11]. If you like the script please vote for it on Vim
+Online [12].
 
 ===============================================================================
                                                                  *misc-license*
 License ~
 
-This software is licensed under the MIT license [11]. ÂŠ 2014 Peter Odding
+This software is licensed under the MIT license [13]. ÂŠ 2014 Peter Odding
 <peter@peterodding.com>.
 
 ===============================================================================
@@ -869,7 +869,9 @@ References ~
 [7] http://peterodding.com/code/vim/notes/#recentnotes_command
 [8] http://peterodding.com/code/vim/notes/#showtaggednotes_command
 [9] http://peterodding.com/code/vim/shell/
-[10] http://www.vim.org/scripts/script.php?script_id=4597
-[11] http://en.wikipedia.org/wiki/MIT_License
+[10] http://github.com/xolox/vim-misc
+[11] http://peterodding.com/code/vim/misc
+[12] http://www.vim.org/scripts/script.php?script_id=4597
+[13] http://en.wikipedia.org/wiki/MIT_License
 
 vim: ft=help

@@ -38,7 +38,7 @@ from the source code of the miscellaneous scripts using the Python module
 <!-- Start of generated documentation -->
 
 The documentation of the 81 functions below was extracted from
-15 Vim scripts on June 21, 2014 at 20:54.
+15 Vim scripts on June 22, 2014 at 00:52.
 
 ### Handling of special buffers
 
@@ -660,17 +660,19 @@ first version string. Returns 1 (true) when it is, 0 (false) otherwise.
 
 ## Contact
 
-If you have questions, bug reports, suggestions, etc. the author can be
-contacted at <peter@peterodding.com>. The latest version is available at
-<http://peterodding.com/code/vim/misc> and <http://github.com/xolox/vim-misc>.
-If you like the script please vote for it on [Vim Online] [].
+If you have questions, bug reports, suggestions, etc. please open an issue or
+pull request on [GitHub] []. Download links and documentation can be found on
+the plug-in's [homepage] []. If you like the script please vote for it on [Vim
+Online] [].
 
 ## License
 
-This software is licensed under the [MIT license] [].
+This software is licensed under the [MIT license] [].  
 © 2014 Peter Odding &lt;<peter@peterodding.com>&gt;.
 
 
+[GitHub]: http://github.com/xolox/vim-misc
+[homepage]: http://peterodding.com/code/vim/misc
 [MIT license]: http://en.wikipedia.org/wiki/MIT_License
 [Pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
 [plugins]: http://peterodding.com/code/vim/
