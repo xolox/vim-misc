@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 81 functions below was extracted from
-15 Vim scripts on June 22, 2014 at 00:52.
+The documentation of the 83 functions below was extracted from
+16 Vim scripts on June 22, 2014 at 01:04.
 
 ### Handling of special buffers
 
@@ -95,6 +95,52 @@ Vim commands based on the contents of the current buffer. Here's an
 example of how you would use it:
 
     :command -nargs=* -complete=customlist,xolox#misc#complete#keywords MyCmd call s:MyCmd(<f-args>)
+
+### Rate limiting for Vim's CursorHold event
+
+Several of my Vim plug-ins (e.g. [vim-easytags][], [vim-notes][] and
+[vim-session][]) use Vim's [CursorHold][] and [CursorHoldI][] events to
+perform periodic tasks when the user doesn't press any keys for a couple of
+seconds. These events by default fire after four seconds, this is
+configurable using Vim's ['updatetime'][] option. The problem that this
+script solves is that there are Vim plug-ins which set the ['updatetime'][]
+option to unreasonably low values, thereby breaking my Vim plug-ins and
+probably a lot of other Vim plug-ins out there. When users complain about
+this I can tell them that another Vim plug-in is to blame, but users don't
+care for the difference, their Vim is broken! So I implemented a workaround.
+This script enables registration of [CursorHold][] event handlers with a
+configurable interval (expressed in seconds). The event handlers will be
+called no more than once every interval.
+
+['updatetime']: http://vimdoc.sourceforge.net/htmldoc/options.html#'updatetime'
+[CursorHold]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#CursorHold
+[CursorHoldI]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#CursorHoldI
+[vim-easytags]: http://peterodding.com/code/vim/easytags/
+[vim-notes]: http://peterodding.com/code/vim/notes/
+[vim-session]: http://peterodding.com/code/vim/session/
+
+#### The `xolox#misc#cursorhold#register()` function
+
+Register a [CursorHold][] event handler with a custom interval. This
+function takes a single argument which is a dictionary with the following
+fields:
+
+ - **function** (required): The name of the event handler function (a
+   string).
+
+ - **arguments** (optional): A list of arguments to pass to the event
+   handler function (defaults to an empty list).
+
+ - **interval** (optional): The number of seconds between calls to the
+   event handler (defaults to 4).
+
+#### The `xolox#misc#cursorhold#autocmd()` function
+
+The 'top level event handler' that's called by Vim whenever the
+[CursorHold][] or [CursorHoldI][] event fires. It iterates through the
+event handlers registered using `xolox#misc#cursorhold#register()` and
+calls each event handler at the appropriate interval, keeping track of
+the time when each event handler was last run.
 
 ### String escaping functions
 

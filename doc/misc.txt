@@ -13,37 +13,40 @@ Contents ~
    4. The |xolox#misc#buffer#unlock()| function
   2. Tab completion for user defined commands |misc-tab-completion-for-user-defined-commands|
    1. The |xolox#misc#complete#keywords()| function
-  3. String escaping functions                 |misc-string-escaping-functions|
+  3. Rate limiting for Vim's CursorHold event |misc-rate-limiting-for-vims-cursorhold-event|
+   1. The |xolox#misc#cursorhold#register()| function
+   2. The |xolox#misc#cursorhold#autocmd()| function
+  4. String escaping functions                 |misc-string-escaping-functions|
    1. The |xolox#misc#escape#pattern()| function
    2. The |xolox#misc#escape#substitute()| function
    3. The |xolox#misc#escape#shell()| function
-  4. Human friendly string formatting for Vim |misc-human-friendly-string-formatting-for-vim|
+  5. Human friendly string formatting for Vim |misc-human-friendly-string-formatting-for-vim|
    1. The |xolox#misc#format#pluralize()| function
    2. The |xolox#misc#format#timestamp()| function
-  5. List handling functions                     |misc-list-handling-functions|
+  6. List handling functions                     |misc-list-handling-functions|
    1. The |xolox#misc#list#unique()| function
    2. The |xolox#misc#list#binsert()| function
-  6. Functions to interact with the user |misc-functions-to-interact-with-user|
+  7. Functions to interact with the user |misc-functions-to-interact-with-user|
    1. The |xolox#misc#msg#info()| function
    2. The |xolox#misc#msg#warn()| function
    3. The |xolox#misc#msg#debug()| function
-  7. Integration between Vim and its environment |misc-integration-between-vim-its-environment|
+  8. Integration between Vim and its environment |misc-integration-between-vim-its-environment|
    1. The |xolox#misc#open#file()| function
    2. The |xolox#misc#open#url()| function
-  8. Vim and plug-in option handling         |misc-vim-plug-in-option-handling|
+  9. Vim and plug-in option handling         |misc-vim-plug-in-option-handling|
    1. The |xolox#misc#option#get()| function
    2. The |xolox#misc#option#split()| function
    3. The |xolox#misc#option#join()| function
    4. The |xolox#misc#option#split_tags()| function
    5. The |xolox#misc#option#join_tags()| function
    6. The |xolox#misc#option#eval_tags()| function
-  9. Operating system interfaces             |misc-operating-system-interfaces|
+  10. Operating system interfaces            |misc-operating-system-interfaces|
    1. The |xolox#misc#os#is_mac()| function
    2. The |xolox#misc#os#is_win()| function
    3. The |xolox#misc#os#find_vim()| function
    4. The |xolox#misc#os#exec()| function
    5. The |xolox#misc#os#can_use_dll()| function
-  10. Pathname manipulation functions    |misc-pathname-manipulation-functions|
+  11. Pathname manipulation functions    |misc-pathname-manipulation-functions|
    1. The |xolox#misc#path#which()| function
    2. The |xolox#misc#path#split()| function
    3. The |xolox#misc#path#join()| function
@@ -56,14 +59,14 @@ Contents ~
    10. The |xolox#misc#path#decode()| function
    11. The |xolox#misc#path#is_relative()| function
    12. The |xolox#misc#path#tempdir()| function
-  11. String handling                                    |misc-string-handling|
+  12. String handling                                    |misc-string-handling|
    1. The |xolox#misc#str#slug()| function
    2. The |xolox#misc#str#ucfirst()| function
    3. The |xolox#misc#str#compact()| function
    4. The |xolox#misc#str#trim()| function
    5. The |xolox#misc#str#indent()| function
    6. The |xolox#misc#str#dedent()| function
-  12. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
+  13. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
    1. The |xolox#misc#test#reset()| function
    2. The |xolox#misc#test#summarize()| function
    3. The |xolox#misc#test#wrap()| function
@@ -72,7 +75,7 @@ Contents ~
    6. The |xolox#misc#test#assert_true()| function
    7. The |xolox#misc#test#assert_equals()| function
    8. The |xolox#misc#test#assert_same_type()| function
-  13. Tests for the miscellaneous Vim scripts |tests-for-miscellaneous-vim-scripts|
+  14. Tests for the miscellaneous Vim scripts |tests-for-miscellaneous-vim-scripts|
    1. The |xolox#misc#tests#run()| function
    2. The |xolox#misc#tests#pattern_escaping()| function
    3. The |xolox#misc#tests#substitute_escaping()| function
@@ -96,12 +99,12 @@ function
    19. The |xolox#misc#tests#multiline_string_dedent()| function
    20. The |xolox#misc#tests#version_string_parsing()| function
    21. The |xolox#misc#tests#version_string_comparison()| function
-  14. Timing of long during operations  |misc-timing-of-long-during-operations|
+  15. Timing of long during operations  |misc-timing-of-long-during-operations|
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
    3. The |xolox#misc#timer#force()| function
    4. The |xolox#misc#timer#convert()| function
-  15. Version string handling                    |misc-version-string-handling|
+  16. Version string handling                    |misc-version-string-handling|
    1. The |xolox#misc#version#parse()| function
    2. The |xolox#misc#version#at_least()| function
  4. Contact                                                      |misc-contact|
@@ -151,8 +154,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 81 functions below was extracted from 15 Vim scripts
-on June 22, 2014 at 00:52.
+The documentation of the 83 functions below was extracted from 16 Vim scripts
+on June 22, 2014 at 01:04.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -213,6 +216,46 @@ you would use it:
 >
   :command -nargs=* -complete=customlist,xolox#misc#complete#keywords MyCmd call s:MyCmd(<f-args>)
 <
+-------------------------------------------------------------------------------
+                                 *misc-rate-limiting-for-vims-cursorhold-event*
+Rate limiting for Vim's CursorHold event ~
+
+Several of my Vim plug-ins (e.g. vim-easytags [9], vim-notes [6] and vim-
+session [10]) use Vim's |CursorHold| and |CursorHoldI| events to perform
+periodic tasks when the user doesn't press any keys for a couple of seconds.
+These events by default fire after four seconds, this is configurable using
+Vim's |'updatetime'| option. The problem that this script solves is that there
+are Vim plug-ins which set the |'updatetime'| option to unreasonably low
+values, thereby breaking my Vim plug-ins and probably a lot of other Vim plug-
+ins out there. When users complain about this I can tell them that another Vim
+plug-in is to blame, but users don't care for the difference, their Vim is
+broken! So I implemented a workaround. This script enables registration of
+|CursorHold| event handlers with a configurable interval (expressed in
+seconds). The event handlers will be called no more than once every interval.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#cursorhold#register()* function
+
+Register a |CursorHold| event handler with a custom interval. This function
+takes a single argument which is a dictionary with the following fields:
+
+- **function** (required): The name of the event handler function (a string).
+
+- **arguments** (optional): A list of arguments to pass to the event handler
+  function (defaults to an empty list).
+
+- **interval** (optional): The number of seconds between calls to the event
+  handler (defaults to 4).
+
+-------------------------------------------------------------------------------
+The *xolox#misc#cursorhold#autocmd()* function
+
+The 'top level event handler' that's called by Vim whenever the |CursorHold| or
+|CursorHoldI| event fires. It iterates through the event handlers registered
+using |xolox#misc#cursorhold#register()| and calls each event handler at the
+appropriate interval, keeping track of the time when each event handler was
+last run.
+
 -------------------------------------------------------------------------------
                                                *misc-string-escaping-functions*
 String escaping functions ~
@@ -439,7 +482,7 @@ value of |v:progname|, but if you have a preference you can pass the string
 The *xolox#misc#os#exec()* function
 
 Execute an external command (hiding the console on Microsoft Windows when my
-vim-shell plug-in [9] is installed).
+vim-shell plug-in [11] is installed).
 
 Expects a dictionary with the following key/value pairs as the first argument:
 
@@ -845,15 +888,15 @@ version string. Returns 1 (true) when it is, 0 (false) otherwise.
 Contact ~
 
 If you have questions, bug reports, suggestions, etc. please open an issue or
-pull request on GitHub [10]. Download links and documentation can be found on
-the plug-in's homepage [11]. If you like the script please vote for it on Vim
-Online [12].
+pull request on GitHub [12]. Download links and documentation can be found on
+the plug-in's homepage [13]. If you like the script please vote for it on Vim
+Online [14].
 
 ===============================================================================
                                                                  *misc-license*
 License ~
 
-This software is licensed under the MIT license [13]. ÂŠ 2014 Peter Odding
+This software is licensed under the MIT license [15]. ÂŠ 2014 Peter Odding
 <peter@peterodding.com>.
 
 ===============================================================================
@@ -868,10 +911,12 @@ References ~
 [6] http://peterodding.com/code/vim/notes/
 [7] http://peterodding.com/code/vim/notes/#recentnotes_command
 [8] http://peterodding.com/code/vim/notes/#showtaggednotes_command
-[9] http://peterodding.com/code/vim/shell/
-[10] http://github.com/xolox/vim-misc
-[11] http://peterodding.com/code/vim/misc
-[12] http://www.vim.org/scripts/script.php?script_id=4597
-[13] http://en.wikipedia.org/wiki/MIT_License
+[9] http://peterodding.com/code/vim/easytags/
+[10] http://peterodding.com/code/vim/session/
+[11] http://peterodding.com/code/vim/shell/
+[12] http://github.com/xolox/vim-misc
+[13] http://peterodding.com/code/vim/misc
+[14] http://www.vim.org/scripts/script.php?script_id=4597
+[15] http://en.wikipedia.org/wiki/MIT_License
 
 vim: ft=help

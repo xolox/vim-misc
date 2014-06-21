@@ -1,7 +1,7 @@
 " The version of my miscellaneous scripts.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: July 20, 2013
+" Last Change: June 22, 2014
 " URL: http://peterodding.com/code/vim/misc/
 
-let g:xolox#misc#version = '1.8.5'
+let g:xolox#misc#version = '1.9'
