@@ -59,14 +59,17 @@ Contents ~
    10. The |xolox#misc#path#decode()| function
    11. The |xolox#misc#path#is_relative()| function
    12. The |xolox#misc#path#tempdir()| function
-  12. String handling                                    |misc-string-handling|
+  12. Persist/recall Vim values from/to files |misc-persist-recall-vim-values-from-to-files|
+   1. The |xolox#misc#persist#load()| function
+   2. The |xolox#misc#persist#save()| function
+  13. String handling                                    |misc-string-handling|
    1. The |xolox#misc#str#slug()| function
    2. The |xolox#misc#str#ucfirst()| function
    3. The |xolox#misc#str#compact()| function
    4. The |xolox#misc#str#trim()| function
    5. The |xolox#misc#str#indent()| function
    6. The |xolox#misc#str#dedent()| function
-  13. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
+  14. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
    1. The |xolox#misc#test#reset()| function
    2. The |xolox#misc#test#summarize()| function
    3. The |xolox#misc#test#wrap()| function
@@ -75,7 +78,7 @@ Contents ~
    6. The |xolox#misc#test#assert_true()| function
    7. The |xolox#misc#test#assert_equals()| function
    8. The |xolox#misc#test#assert_same_type()| function
-  14. Tests for the miscellaneous Vim scripts |tests-for-miscellaneous-vim-scripts|
+  15. Tests for the miscellaneous Vim scripts |tests-for-miscellaneous-vim-scripts|
    1. The |xolox#misc#tests#run()| function
    2. The |xolox#misc#tests#pattern_escaping()| function
    3. The |xolox#misc#tests#substitute_escaping()| function
@@ -99,12 +102,12 @@ function
    19. The |xolox#misc#tests#multiline_string_dedent()| function
    20. The |xolox#misc#tests#version_string_parsing()| function
    21. The |xolox#misc#tests#version_string_comparison()| function
-  15. Timing of long during operations  |misc-timing-of-long-during-operations|
+  16. Timing of long during operations  |misc-timing-of-long-during-operations|
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
    3. The |xolox#misc#timer#force()| function
    4. The |xolox#misc#timer#convert()| function
-  16. Version string handling                    |misc-version-string-handling|
+  17. Version string handling                    |misc-version-string-handling|
    1. The |xolox#misc#version#parse()| function
    2. The |xolox#misc#version#at_least()| function
  4. Contact                                                      |misc-contact|
@@ -154,8 +157,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 83 functions below was extracted from 16 Vim scripts
-on June 22, 2014 at 01:04.
+The documentation of the 85 functions below was extracted from 17 Vim scripts
+on June 22, 2014 at 01:49.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -615,6 +618,39 @@ false (0) otherwise.
 The *xolox#misc#path#tempdir()* function
 
 Create a temporary directory and return the pathname of the directory.
+
+-------------------------------------------------------------------------------
+                                 *misc-persist-recall-vim-values-from-to-files*
+Persist/recall Vim values from/to files ~
+
+Vim's |string()| function can be used to serialize Vim script values like
+numbers, strings, lists, dictionaries and composites of them to a string which
+can later be evaluated using the |eval()| function to turn it back into the
+original value. This Vim script provides functions to use these functions to
+persist and recall Vim values from/to files. This is very useful for
+communication between (possibly concurrent) Vim processes.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#persist#load()* function
+
+Read a Vim value like a number, string, list or dictionary from a file using
+|readfile()| and |eval()|. The first argument is the filename of the file to
+read (a string). The optional second argument specifies the default value which
+is returned when the file can't be loaded. This function returns the loaded
+value or the default value (which itself defaults to the integer 0).
+
+-------------------------------------------------------------------------------
+The *xolox#misc#persist#save()* function
+
+Write a Vim value like a number, string, list or dictionary to a file using
+|string()| and |writefile()|. The first argument is the filename of the file to
+write (a string) and the second argument is the value to write (any value).
+
+This function writes the serialized value to an intermediate file which is then
+renamed into place atomically. This avoids issues with concurrent processes
+where for example a producer has written a partial file which is read by a
+consumer before the file is complete. In this case the consumer would read a
+corrupt value. The rename trick avoids this problem.
 
 -------------------------------------------------------------------------------
                                                          *misc-string-handling*
