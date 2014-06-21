@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 80 functions below was extracted from
-15 Vim scripts on July 20, 2013 at 10:41.
+The documentation of the 81 functions below was extracted from
+15 Vim scripts on June 21, 2014 at 20:54.
 
 ### Handling of special buffers
 
@@ -636,6 +636,15 @@ handling as Vim's [printf()] [printf] function with one difference: At the
 point where you want the elapsed time to be embedded, you write `%s` and
 you pass the list returned by `xolox#misc#timer#start()` as an argument.
 
+#### The `xolox#misc#timer#convert()` function
+
+Convert the value returned by `xolox#misc#timer#start()` to a string
+representation of the elapsed time since `xolox#misc#timer#start()` was
+called. Other values are returned unmodified (this allows using it with
+Vim's [map()][] function).
+
+[map()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#map()
+
 ### Version string handling
 
 #### The `xolox#misc#version#parse()` function
@@ -658,8 +667,8 @@ If you like the script please vote for it on [Vim Online] [].
 
 ## License
 
-This software is licensed under the [MIT license] [].  
-© 2013 Peter Odding &lt;<peter@peterodding.com>&gt;.
+This software is licensed under the [MIT license] [].
+© 2014 Peter Odding &lt;<peter@peterodding.com>&gt;.
 
 
 [MIT license]: http://en.wikipedia.org/wiki/MIT_License

@@ -100,6 +100,7 @@ function
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
    3. The |xolox#misc#timer#force()| function
+   4. The |xolox#misc#timer#convert()| function
   15. Version string handling                    |misc-version-string-handling|
    1. The |xolox#misc#version#parse()| function
    2. The |xolox#misc#version#at_least()| function
@@ -150,8 +151,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 80 functions below was extracted from 15 Vim scripts
-on July 20, 2013 at 10:41.
+The documentation of the 81 functions below was extracted from 15 Vim scripts
+on June 21, 2014 at 20:54.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
@@ -817,6 +818,14 @@ you want the elapsed time to be embedded, you write '%s' and you pass the list
 returned by |xolox#misc#timer#start()| as an argument.
 
 -------------------------------------------------------------------------------
+The *xolox#misc#timer#convert()* function
+
+Convert the value returned by |xolox#misc#timer#start()| to a string
+representation of the elapsed time since |xolox#misc#timer#start()| was called.
+Other values are returned unmodified (this allows using it with Vim's |map()|
+function).
+
+-------------------------------------------------------------------------------
                                                  *misc-version-string-handling*
 Version string handling ~
 
@@ -844,7 +853,7 @@ you like the script please vote for it on Vim Online [10].
                                                                  *misc-license*
 License ~
 
-This software is licensed under the MIT license [11]. © 2013 Peter Odding
+This software is licensed under the MIT license [11]. ÂŠ 2014 Peter Odding
 <peter@peterodding.com>.
 
 ===============================================================================

@@ -1,7 +1,7 @@
 " Timing of long during operations.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 2, 2013
+" Last Change: June 21, 2014
 " URL: http://peterodding.com/code/vim/misc/
 
 if !exists('g:timer_enabled')
@@ -34,7 +34,7 @@ function! xolox#misc#timer#stop(...) " {{{1
   " [verbose]: http://vimdoc.sourceforge.net/htmldoc/options.html#'verbose'
   " [printf]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
   if (g:timer_enabled || &verbose >= g:timer_verbosity)
-    call call('xolox#misc#msg#info', map(copy(a:000), 's:convert_value(v:val)'))
+    call call('xolox#misc#msg#info', map(copy(a:000), 'xolox#misc#timer#convert(v:val)'))
   endif
 endfunction
 
@@ -43,10 +43,16 @@ function! xolox#misc#timer#force(...) " {{{1
   " handling as Vim's [printf()] [printf] function with one difference: At the
   " point where you want the elapsed time to be embedded, you write `%s` and
   " you pass the list returned by `xolox#misc#timer#start()` as an argument.
-  call call('xolox#misc#msg#info', map(copy(a:000), 's:convert_value(v:val)'))
+  call call('xolox#misc#msg#info', map(copy(a:000), 'xolox#misc#timer#convert(v:val)'))
 endfunction
 
-function! s:convert_value(value) " {{{1
+function! xolox#misc#timer#convert(value) " {{{1
+  " Convert the value returned by `xolox#misc#timer#start()` to a string
+  " representation of the elapsed time since `xolox#misc#timer#start()` was
+  " called. Other values are returned unmodified (this allows using it with
+  " Vim's [map()][] function).
+  "
+  " [map()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#map()
   if type(a:value) == type([]) && len(a:value) == 2 && a:value[0] == s:unique_marker
     if s:has_reltime
       let ts = xolox#misc#str#trim(reltimestr(reltime(a:value[1])))
@@ -54,9 +60,8 @@ function! s:convert_value(value) " {{{1
       let ts = localtime() - a:value[1]
     endif
     return xolox#misc#format#timestamp(ts)
-  else
-    return a:value
   endif
+  return a:value
 endfunction
 
 " vim: ts=2 sw=2 et
