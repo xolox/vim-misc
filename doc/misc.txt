@@ -6,47 +6,52 @@ Contents ~
  1. Introduction                                            |misc-introduction|
  2. Installation                                            |misc-installation|
  3. Function documentation                        |misc-function-documentation|
-  1. Handling of special buffers             |misc-handling-of-special-buffers|
+  1. Asynchronous Vim script evaluation |misc-asynchronous-vim-script-evaluation|
+   1. The |xolox#misc#async#call()| function
+   2. The |xolox#misc#async#inside_child()| function
+   3. The |xolox#misc#async#callback_to_parent()| function
+   4. The |xolox#misc#async#periodic_callback()| function
+  2. Handling of special buffers             |misc-handling-of-special-buffers|
    1. The |xolox#misc#buffer#is_empty()| function
    2. The |xolox#misc#buffer#prepare()| function
    3. The |xolox#misc#buffer#lock()| function
    4. The |xolox#misc#buffer#unlock()| function
-  2. Tab completion for user defined commands |misc-tab-completion-for-user-defined-commands|
+  3. Tab completion for user defined commands |misc-tab-completion-for-user-defined-commands|
    1. The |xolox#misc#complete#keywords()| function
-  3. Rate limiting for Vim's CursorHold event |misc-rate-limiting-for-vims-cursorhold-event|
+  4. Rate limiting for Vim's CursorHold event |misc-rate-limiting-for-vims-cursorhold-event|
    1. The |xolox#misc#cursorhold#register()| function
    2. The |xolox#misc#cursorhold#autocmd()| function
-  4. String escaping functions                 |misc-string-escaping-functions|
+  5. String escaping functions                 |misc-string-escaping-functions|
    1. The |xolox#misc#escape#pattern()| function
    2. The |xolox#misc#escape#substitute()| function
    3. The |xolox#misc#escape#shell()| function
-  5. Human friendly string formatting for Vim |misc-human-friendly-string-formatting-for-vim|
+  6. Human friendly string formatting for Vim |misc-human-friendly-string-formatting-for-vim|
    1. The |xolox#misc#format#pluralize()| function
    2. The |xolox#misc#format#timestamp()| function
-  6. List handling functions                     |misc-list-handling-functions|
+  7. List handling functions                     |misc-list-handling-functions|
    1. The |xolox#misc#list#unique()| function
    2. The |xolox#misc#list#binsert()| function
-  7. Functions to interact with the user |misc-functions-to-interact-with-user|
+  8. Functions to interact with the user |misc-functions-to-interact-with-user|
    1. The |xolox#misc#msg#info()| function
    2. The |xolox#misc#msg#warn()| function
    3. The |xolox#misc#msg#debug()| function
-  8. Integration between Vim and its environment |misc-integration-between-vim-its-environment|
+  9. Integration between Vim and its environment |misc-integration-between-vim-its-environment|
    1. The |xolox#misc#open#file()| function
    2. The |xolox#misc#open#url()| function
-  9. Vim and plug-in option handling         |misc-vim-plug-in-option-handling|
+  10. Vim and plug-in option handling        |misc-vim-plug-in-option-handling|
    1. The |xolox#misc#option#get()| function
    2. The |xolox#misc#option#split()| function
    3. The |xolox#misc#option#join()| function
    4. The |xolox#misc#option#split_tags()| function
    5. The |xolox#misc#option#join_tags()| function
    6. The |xolox#misc#option#eval_tags()| function
-  10. Operating system interfaces            |misc-operating-system-interfaces|
+  11. Operating system interfaces            |misc-operating-system-interfaces|
    1. The |xolox#misc#os#is_mac()| function
    2. The |xolox#misc#os#is_win()| function
    3. The |xolox#misc#os#find_vim()| function
    4. The |xolox#misc#os#exec()| function
    5. The |xolox#misc#os#can_use_dll()| function
-  11. Pathname manipulation functions    |misc-pathname-manipulation-functions|
+  12. Pathname manipulation functions    |misc-pathname-manipulation-functions|
    1. The |xolox#misc#path#which()| function
    2. The |xolox#misc#path#split()| function
    3. The |xolox#misc#path#join()| function
@@ -59,17 +64,17 @@ Contents ~
    10. The |xolox#misc#path#decode()| function
    11. The |xolox#misc#path#is_relative()| function
    12. The |xolox#misc#path#tempdir()| function
-  12. Persist/recall Vim values from/to files |misc-persist-recall-vim-values-from-to-files|
+  13. Persist/recall Vim values from/to files |misc-persist-recall-vim-values-from-to-files|
    1. The |xolox#misc#persist#load()| function
    2. The |xolox#misc#persist#save()| function
-  13. String handling                                    |misc-string-handling|
+  14. String handling                                    |misc-string-handling|
    1. The |xolox#misc#str#slug()| function
    2. The |xolox#misc#str#ucfirst()| function
    3. The |xolox#misc#str#compact()| function
    4. The |xolox#misc#str#trim()| function
    5. The |xolox#misc#str#indent()| function
    6. The |xolox#misc#str#dedent()| function
-  14. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
+  15. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
    1. The |xolox#misc#test#reset()| function
    2. The |xolox#misc#test#summarize()| function
    3. The |xolox#misc#test#wrap()| function
@@ -78,7 +83,7 @@ Contents ~
    6. The |xolox#misc#test#assert_true()| function
    7. The |xolox#misc#test#assert_equals()| function
    8. The |xolox#misc#test#assert_same_type()| function
-  15. Tests for the miscellaneous Vim scripts |tests-for-miscellaneous-vim-scripts|
+  16. Tests for the miscellaneous Vim scripts |tests-for-miscellaneous-vim-scripts|
    1. The |xolox#misc#tests#run()| function
    2. The |xolox#misc#tests#pattern_escaping()| function
    3. The |xolox#misc#tests#substitute_escaping()| function
@@ -102,12 +107,12 @@ function
    19. The |xolox#misc#tests#multiline_string_dedent()| function
    20. The |xolox#misc#tests#version_string_parsing()| function
    21. The |xolox#misc#tests#version_string_comparison()| function
-  16. Timing of long during operations  |misc-timing-of-long-during-operations|
+  17. Timing of long during operations  |misc-timing-of-long-during-operations|
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
    3. The |xolox#misc#timer#force()| function
    4. The |xolox#misc#timer#convert()| function
-  17. Version string handling                    |misc-version-string-handling|
+  18. Version string handling                    |misc-version-string-handling|
    1. The |xolox#misc#version#parse()| function
    2. The |xolox#misc#version#at_least()| function
  4. Contact                                                      |misc-contact|
@@ -157,19 +162,166 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 85 functions below was extracted from 17 Vim scripts
-on June 22, 2014 at 01:49.
+The documentation of the 89 functions below was extracted from 18 Vim scripts
+on June 22, 2014 at 02:54.
+
+-------------------------------------------------------------------------------
+                                      *misc-asynchronous-vim-script-evaluation*
+Asynchronous Vim script evaluation ~
+
+The |xolox#misc#async#call()| function builds on top of |xolox#misc#os#exec()|
+to support asynchronous evaluation of Vim scripts. The first (and for now only)
+use case is my vim-easytags [6] plug-in which has a bunch of conflicting
+requirements:
+
+1. I want the vim-easytags [6] plug-in to be as portable as possible.
+   Ideally everything is implemented in Vim script because that's the only
+   thing I can rely on to be available for all potential users of the plug-
+   in!
+
+2. Because of point one I've been forced to implement tags file reading,
+   parsing, (fold case) sorting and writing in Vim script. This is fine for
+   small tags files but once they grow to a couple of megabytes it becomes
+   annoying because Vim is unresponsive during tags file updates (key
+   presses are fortunately buffered due to Vim's input model but that
+   doesn't make it a nice user experience :-).
+
+3. I could (and did in the past) come up with all sorts of hacks to speed
+   things up without switching away from Vim script, but none of them are
+   going to solve the fundamental problem that Vim's unresponsive hiccups
+   become longer as tags files grow larger.
+
+By now it should be clear where this is heading: _Why not handle tags file
+updates in a Vim process that runs in the background without blocking the Vim
+process that the user is interacting with?_ It turns out that there are quite a
+few details to take care of, but with those out of the way, it might just work!
+I'm actually hoping to make asynchronous updates the default mode in vim-
+easytags [6]. This means I need this functionality to be as portable and robust
+as possible.
+
+**Status:** This code has seen little testing so I wouldn't trust it too much
+just yet. On the other hand, as I said, my intention is to make this
+functionality as portable and robust as possible. You be the judge :-).
+
+-------------------------------------------------------------------------------
+The *xolox#misc#async#call()* function
+
+Call a Vim script function asynchronously by starting a hidden Vim process in
+the background. Once the function returns the hidden Vim process terminates
+itself. This function takes a single argument which is a dictionary with the
+following key/value pairs:
+
+- **function** (required): The name of the Vim function to call inside the
+  child process (a string). I suggest using an |autoload| function for this,
+  see below.
+
+- **arguments** (optional): A list of arguments to pass to the function. This
+  list is serialized to a string using |string()| and deserialized using
+  |eval()|.
+
+- **callback** (optional): The name of a Vim function to call in the parent
+  process when the child process has completed (a string).
+
+- **clientserver** (optional): If this is true (1) the child process will
+  notify the parent process when it has finished (the default is true). This
+  works using Vim's client/server support which is not always available. As a
+  fall back Vim's |CursorHold| automatic command is also supported (although
+  the effect is not quite as instantaneous :-).
+
+This functionality is experimental and non trivial to use, so consider yourself
+warned :-).
+
+**Limitations**
+
+I'm making this functionality available in vim-misc [7] because I think it can
+be useful to other plug-ins, however if you are going to use it you should be
+aware of the following limitations:
+
+- Because of the use of multiple processes this functionality is only
+  suitable for 'heavy' tasks.
+
+- The function arguments are serialized to a string which is passed to the
+  hidden Vim process as a command line argument, so the amount of data you
+  can pass will be limited by your operating environment.
+
+- The hidden Vim process is explicitly isolated from the user in several ways
+  (see below for more details). This is to make sure that the hidden Vim
+  processes are fast and don't clobber the user's editing sessions in any
+  way.
+
+**Changes to how Vim normally works**
+
+You have to be aware that the hidden Vim process is initialized in a specific
+way that is very different from your regular Vim editing sessions:
+
+- Your |vimrc| file is ignored using the '-u NONE' command line option.
+
+- Your |gvimrc| file (if you even knew it existed ;-) is ignored using the
+  '-U NONE' command line option.
+
+- Plug-in loading is skipped using the '--noplugin' command line option.
+
+- Swap files (see |swap-file|) are disabled using the '-n' command line
+  option. This makes sure asynchronous Vim processes don't disturb the user's
+  editing session.
+
+- Your |viminfo| file is ignored using the '-i NONE' command line option.
+  Just like with swap files this makes sure asynchronous Vim processes don't
+  disturb the user's editing session.
+
+- No-compatible mode is enabled using the '-N' command line option (usually
+  the existence of your vimrc script would have achieved the same effect but
+  since we disable loading of your vimrc we need to spell things out for
+  Vim).
+
+**Use an auto-load function**
+
+The function you want to call is identified by its name which has to be
+defined, but I just explained above that all regular initialization is disabled
+for asynchronous Vim processes, so what gives? The answer is to use an
+|autoload| function. This should work fine because the asynchronous Vim process
+'inherits' the value of the |'runtimepath'| option from your editing session.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#async#inside_child()* function
+
+Entry point inside the hidden Vim process that runs in the background. Invoked
+indirectly by |xolox#misc#async#call()| because it runs a command similar to
+the following:
+>
+  vim --cmd 'call xolox#misc#async#inside_child(...)'
+<
+This function is responsible for calling the user defined function, capturing
+exceptions and reporting the results back to the parent Vim process using Vim's
+client/server support or a temporary file.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#async#callback_to_parent()* function
+
+When Vim was compiled with client/server support this function (in the parent
+process) will be called by |xolox#misc#async#inside_child()| (in the child
+process) after the user defined function has returned. This enables more or
+less instant callbacks after running an asynchronous function.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#async#periodic_callback()* function
+
+When client/server support is not being used the vim-misc plug-in improvises:
+It uses Vim's |CursorHold| event to periodically check if an asynchronous
+process has written its results to one of the expected temporary files. If a
+response is found the temporary file is read and deleted and then
+|xolox#misc#async#callback_to_parent()| is called to process the response.
 
 -------------------------------------------------------------------------------
                                              *misc-handling-of-special-buffers*
 Handling of special buffers ~
 
 The functions defined here make it easier to deal with special Vim buffers that
-contain text generated by a Vim plug-in. For example my vim-notes plug-in [6]
+contain text generated by a Vim plug-in. For example my vim-notes plug-in [8]
 generates several such buffers:
 
-- :RecentNotes [7] lists recently modified notes
-- :ShowTaggedNotes [8] lists notes grouped by tags
+- :RecentNotes [9] lists recently modified notes
+- :ShowTaggedNotes [10] lists notes grouped by tags
 - etc.
 
 Because the text in these buffers is generated, Vim shouldn't bother with swap
@@ -223,8 +375,8 @@ you would use it:
                                  *misc-rate-limiting-for-vims-cursorhold-event*
 Rate limiting for Vim's CursorHold event ~
 
-Several of my Vim plug-ins (e.g. vim-easytags [9], vim-notes [6] and vim-
-session [10]) use Vim's |CursorHold| and |CursorHoldI| events to perform
+Several of my Vim plug-ins (e.g. vim-easytags [6], vim-notes [8] and vim-
+session [11]) use Vim's |CursorHold| and |CursorHoldI| events to perform
 periodic tasks when the user doesn't press any keys for a couple of seconds.
 These events by default fire after four seconds, this is configurable using
 Vim's |'updatetime'| option. The problem that this script solves is that there
@@ -485,7 +637,7 @@ value of |v:progname|, but if you have a preference you can pass the string
 The *xolox#misc#os#exec()* function
 
 Execute an external command (hiding the console on Microsoft Windows when my
-vim-shell plug-in [11] is installed).
+vim-shell plug-in [12] is installed).
 
 Expects a dictionary with the following key/value pairs as the first argument:
 
@@ -924,15 +1076,15 @@ version string. Returns 1 (true) when it is, 0 (false) otherwise.
 Contact ~
 
 If you have questions, bug reports, suggestions, etc. please open an issue or
-pull request on GitHub [12]. Download links and documentation can be found on
-the plug-in's homepage [13]. If you like the script please vote for it on Vim
-Online [14].
+pull request on GitHub [13]. Download links and documentation can be found on
+the plug-in's homepage [14]. If you like the script please vote for it on Vim
+Online [15].
 
 ===============================================================================
                                                                  *misc-license*
 License ~
 
-This software is licensed under the MIT license [15]. ÂŠ 2014 Peter Odding
+This software is licensed under the MIT license [16]. ÂŠ 2014 Peter Odding
 <peter@peterodding.com>.
 
 ===============================================================================
@@ -944,15 +1096,16 @@ References ~
 [3] http://www.vim.org/scripts/script.php?script_id=2332
 [4] https://github.com/gmarik/vundle
 [5] http://peterodding.com/code/vim/tools/
-[6] http://peterodding.com/code/vim/notes/
-[7] http://peterodding.com/code/vim/notes/#recentnotes_command
-[8] http://peterodding.com/code/vim/notes/#showtaggednotes_command
-[9] http://peterodding.com/code/vim/easytags/
-[10] http://peterodding.com/code/vim/session/
-[11] http://peterodding.com/code/vim/shell/
-[12] http://github.com/xolox/vim-misc
-[13] http://peterodding.com/code/vim/misc
-[14] http://www.vim.org/scripts/script.php?script_id=4597
-[15] http://en.wikipedia.org/wiki/MIT_License
+[6] http://peterodding.com/code/vim/easytags/
+[7] http://peterodding.com/code/vim/misc/
+[8] http://peterodding.com/code/vim/notes/
+[9] http://peterodding.com/code/vim/notes/#recentnotes_command
+[10] http://peterodding.com/code/vim/notes/#showtaggednotes_command
+[11] http://peterodding.com/code/vim/session/
+[12] http://peterodding.com/code/vim/shell/
+[13] http://github.com/xolox/vim-misc
+[14] http://peterodding.com/code/vim/misc
+[15] http://www.vim.org/scripts/script.php?script_id=4597
+[16] http://en.wikipedia.org/wiki/MIT_License
 
 vim: ft=help

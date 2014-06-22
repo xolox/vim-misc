@@ -37,8 +37,168 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 85 functions below was extracted from
-17 Vim scripts on June 22, 2014 at 01:49.
+The documentation of the 89 functions below was extracted from
+18 Vim scripts on June 22, 2014 at 02:54.
+
+### Asynchronous Vim script evaluation
+
+The `xolox#misc#async#call()` function builds on top of `xolox#misc#os#exec()`
+to support asynchronous evaluation of Vim scripts. The first (and for now
+only) use case is my [vim-easytags][] plug-in which has a bunch of
+conflicting requirements:
+
+1. I want the [vim-easytags][] plug-in to be as portable as possible.
+   Ideally everything is implemented in Vim script because that's the only
+   thing I can rely on to be available for all potential users of the
+   plug-in!
+
+2. Because of point one I've been forced to implement tags file reading,
+   parsing, (fold case) sorting and writing in Vim script. This is fine for
+   small tags files but once they grow to a couple of megabytes it becomes
+   annoying because Vim is unresponsive during tags file updates (key
+   presses are fortunately buffered due to Vim's input model but that
+   doesn't make it a nice user experience :-).
+
+3. I could (and did in the past) come up with all sorts of hacks to speed
+   things up without switching away from Vim script, but none of them are
+   going to solve the fundamental problem that Vim's unresponsive hiccups
+   become longer as tags files grow larger.
+
+By now it should be clear where this is heading: _Why not handle tags file
+updates in a Vim process that runs in the background without blocking the
+Vim process that the user is interacting with?_ It turns out that there are
+quite a few details to take care of, but with those out of the way, it might
+just work! I'm actually hoping to make asynchronous updates the default mode
+in [vim-easytags][]. This means I need this functionality to be as
+portable and robust as possible.
+
+**Status:** This code has seen little testing so I wouldn't trust it too
+much just yet. On the other hand, as I said, my intention is to make this
+functionality as portable and robust as possible. You be the judge :-).
+
+[vim-easytags]: http://peterodding.com/code/vim/easytags/
+
+#### The `xolox#misc#async#call()` function
+
+Call a Vim script function asynchronously by starting a hidden Vim process
+in the background. Once the function returns the hidden Vim process
+terminates itself. This function takes a single argument which is a
+dictionary with the following key/value pairs:
+
+ - **function** (required): The name of the Vim function to call inside
+   the child process (a string). I suggest using an [autoload][] function
+   for this, see below.
+
+ - **arguments** (optional): A list of arguments to pass to the function.
+   This list is serialized to a string using [string()][] and deserialized
+   using [eval()][].
+
+ - **callback** (optional): The name of a Vim function to call in the
+   parent process when the child process has completed (a string).
+
+ - **clientserver** (optional): If this is true (1) the child process will
+   notify the parent process when it has finished (the default is true).
+   This works using Vim's client/server support which is not always
+   available. As a fall back Vim's [CursorHold][] automatic command is
+   also supported (although the effect is not quite as instantaneous :-).
+
+This functionality is experimental and non trivial to use, so consider
+yourself warned :-).
+
+**Limitations**
+
+I'm making this functionality available in [vim-misc][] because I think it
+can be useful to other plug-ins, however if you are going to use it you
+should be aware of the following limitations:
+
+ - Because of the use of multiple processes this functionality is only
+   suitable for 'heavy' tasks.
+
+ - The function arguments are serialized to a string which is passed to
+   the hidden Vim process as a command line argument, so the amount of
+   data you can pass will be limited by your operating environment.
+
+ - The hidden Vim process is explicitly isolated from the user in several
+   ways (see below for more details). This is to make sure that the hidden
+   Vim processes are fast and don't clobber the user's editing sessions in
+   any way.
+
+**Changes to how Vim normally works**
+
+You have to be aware that the hidden Vim process is initialized in a
+specific way that is very different from your regular Vim editing
+sessions:
+
+ - Your [vimrc][] file is ignored using the `-u NONE` command line option.
+
+ - Your [gvimrc][] file (if you even knew it existed ;-) is ignored using
+   the `-U NONE` command line option.
+
+ - Plug-in loading is skipped using the `--noplugin` command line option.
+
+ - Swap files (see [swap-file][]) are disabled using the `-n` command line
+   option. This makes sure asynchronous Vim processes don't disturb the
+   user's editing session.
+
+ - Your [viminfo][] file is ignored using the `-i NONE` command line
+   option. Just like with swap files this makes sure asynchronous Vim
+   processes don't disturb the user's editing session.
+
+ - No-compatible mode is enabled using the `-N` command line option
+   (usually the existence of your vimrc script would have achieved the
+   same effect but since we disable loading of your vimrc we need to spell
+   things out for Vim).
+
+**Use an auto-load function**
+
+The function you want to call is identified by its name which has to be
+defined, but I just explained above that all regular initialization is
+disabled for asynchronous Vim processes, so what gives? The answer is to
+use an [autoload][] function. This should work fine because the
+asynchronous Vim process 'inherits' the value of the ['runtimepath'][]
+option from your editing session.
+
+['runtimepath']: http://vimdoc.sourceforge.net/htmldoc/options.html#'runtimepath'
+[autoload]: http://vimdoc.sourceforge.net/htmldoc/eval.html#autoload
+[CursorHold]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#CursorHold
+[eval()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#eval()
+[gvimrc]: http://vimdoc.sourceforge.net/htmldoc/gui.html#gvimrc
+[string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
+[swap-file]: http://vimdoc.sourceforge.net/htmldoc/recover.html#swap-file
+[vim-misc]: http://peterodding.com/code/vim/misc/
+[viminfo]: http://vimdoc.sourceforge.net/htmldoc/starting.html#viminfo
+[vimrc]: http://vimdoc.sourceforge.net/htmldoc/starting.html#vimrc
+
+#### The `xolox#misc#async#inside_child()` function
+
+Entry point inside the hidden Vim process that runs in the background.
+Invoked indirectly by `xolox#misc#async#call()` because it runs a command
+similar to the following:
+
+    vim --cmd 'call xolox#misc#async#inside_child(...)'
+
+This function is responsible for calling the user defined function,
+capturing exceptions and reporting the results back to the parent Vim
+process using Vim's client/server support or a temporary file.
+
+#### The `xolox#misc#async#callback_to_parent()` function
+
+When Vim was compiled with client/server support this function (in the
+parent process) will be called by `xolox#misc#async#inside_child()` (in
+the child process) after the user defined function has returned. This
+enables more or less instant callbacks after running an asynchronous
+function.
+
+#### The `xolox#misc#async#periodic_callback()` function
+
+When client/server support is not being used the vim-misc plug-in
+improvises: It uses Vim's [CursorHold][] event to periodically check if an
+asynchronous process has written its results to one of the expected
+temporary files. If a response is found the temporary file is read and
+deleted and then `xolox#misc#async#callback_to_parent()` is called to
+process the response.
+
+[CursorHold]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#CursorHold
 
 ### Handling of special buffers
 
@@ -745,8 +905,8 @@ first version string. Returns 1 (true) when it is, 0 (false) otherwise.
 
 If you have questions, bug reports, suggestions, etc. please open an issue or
 pull request on [GitHub] []. Download links and documentation can be found on
-the plug-in's [homepage] []. If you like the script please vote for it on [Vim
-Online] [].
+the plug-in's [homepage] []. If you like the script please vote for it on
+[Vim Online] [].
 
 ## License
 
