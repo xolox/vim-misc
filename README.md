@@ -38,7 +38,7 @@ from the source code of the miscellaneous scripts using the Python module
 <!-- Start of generated documentation -->
 
 The documentation of the 92 functions below was extracted from
-19 Vim scripts on June 30, 2014 at 00:19.
+19 Vim scripts on June 30, 2014 at 00:41.
 
 ### Asynchronous Vim script evaluation
 
@@ -665,6 +665,13 @@ mode. The first argument is the pathname of the file to update (a string).
 The second argument is the list of lines to be written to the file. Writes
 the new contents to a temporary file and renames the temporary file into
 place, thereby preventing readers from reading a partially written file.
+Returns 1 if the file is successfully updated, 0 otherwise.
+
+Note that if `xolox#misc#perm#get()` and `xolox#misc#perm#set()` cannot be
+used to preserve the file owner/group/mode the file is still updated using
+a rename (for compatibility with non-UNIX systems and incompatible
+`/usr/bin/stat` implementations) so in that case you can still lose the
+file's owner/group/mode.
 
 #### The `xolox#misc#perm#get()` function
 

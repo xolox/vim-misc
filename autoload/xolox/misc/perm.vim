@@ -32,6 +32,13 @@ function! xolox#misc#perm#update(fname, contents)
   " The second argument is the list of lines to be written to the file. Writes
   " the new contents to a temporary file and renames the temporary file into
   " place, thereby preventing readers from reading a partially written file.
+  " Returns 1 if the file is successfully updated, 0 otherwise.
+  "
+  " Note that if `xolox#misc#perm#get()` and `xolox#misc#perm#set()` cannot be
+  " used to preserve the file owner/group/mode the file is still updated using
+  " a rename (for compatibility with non-UNIX systems and incompatible
+  " `/usr/bin/stat` implementations) so in that case you can still lose the
+  " file's owner/group/mode.
   let starttime = xolox#misc#timer#start()
   let temporary_file = printf('%s.tmp', a:fname)
   call xolox#misc#msg#debug("vim-misc %s: Writing new contents of %s to temporary file %s ..", g:xolox#misc#version, a:fname, temporary_file)
@@ -56,7 +63,7 @@ function! xolox#misc#perm#get(fname)
   let pathname = xolox#misc#path#absolute(a:fname)
   if filereadable(pathname)
     let command = printf('stat --format %s %s', '%U:%G:%a', shellescape(pathname))
-    let result = xolox#misc#os#exec({'command': command})
+    let result = xolox#misc#os#exec({'command': command, 'check': 0})
     if result['exit_code'] == 0 && len(result['stdout']) >= 1
       let tokens = split(result['stdout'][0], ':')
       if len(tokens) == 3
@@ -88,6 +95,6 @@ endfunction
 function! s:run(command, ...)
   let args = map(copy(a:000), 'shellescape(v:val)')
   call insert(args, a:command, 0)
-  let result = xolox#misc#os#exec({'command': call('printf', args)})
+  let result = xolox#misc#os#exec({'command': call('printf', args), 'check': 0})
   return result['exit_code'] == 0
 endfunction
