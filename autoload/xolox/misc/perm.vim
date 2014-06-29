@@ -1,7 +1,7 @@
 " Manipulation of UNIX file permissions.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 29, 2014
+" Last Change: June 30, 2014
 " URL: http://peterodding.com/code/vim/misc/
 "
 " Vim's [writefile()][] function cannot set file permissions for newly created
@@ -26,36 +26,68 @@
 " [vim-easytags]: http://peterodding.com/code/vim/easytags/
 " [writefile()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#writefile()
 
+function! xolox#misc#perm#update(fname, contents)
+  " Atomically update a file's contents while preserving the owner, group and
+  " mode. The first argument is the pathname of the file to update (a string).
+  " The second argument is the list of lines to be written to the file. Writes
+  " the new contents to a temporary file and renames the temporary file into
+  " place, thereby preventing readers from reading a partially written file.
+  let starttime = xolox#misc#timer#start()
+  let temporary_file = printf('%s.tmp', a:fname)
+  call xolox#misc#msg#debug("vim-misc %s: Writing new contents of %s to temporary file %s ..", g:xolox#misc#version, a:fname, temporary_file)
+  if writefile(a:contents, temporary_file) == 0
+    call xolox#misc#perm#set(temporary_file, xolox#misc#perm#get(a:fname))
+    call xolox#misc#msg#debug("vim-misc %s: Replacing %s with %s ..", g:xolox#misc#version, a:fname, temporary_file)
+    if rename(temporary_file, a:fname) == 0
+      call xolox#misc#timer#stop("vim-misc %s: Successfully updated %s using atomic rename in %s.", g:xolox#misc#version, a:fname, starttime)
+      return 1
+    endif
+  endif
+  if filereadable(temporary_file)
+    call delete(temporary_file)
+  endif
+  return 0
+endfunction
+
 function! xolox#misc#perm#get(fname)
-  " Get the permissions of the pathname given as the first argument. Returns a
-  " string which you can later pass to `xolox#misc#perm#set()`.
+  " Get the owner, group and permissions of the pathname given as the first
+  " argument. Returns an opaque value which you can later pass to
+  " `xolox#misc#perm#set()`.
   let pathname = xolox#misc#path#absolute(a:fname)
   if filereadable(pathname)
-    let command = printf('stat --format %%a %s', shellescape(pathname))
+    let command = printf('stat --format %s %s', '%U:%G:%a', shellescape(pathname))
     let result = xolox#misc#os#exec({'command': command})
     if result['exit_code'] == 0 && len(result['stdout']) >= 1
-      let permissions_string = '0' . xolox#misc#str#trim(result['stdout'][0])
-      if permissions_string =~ '^[0-7]\+$'
-        call xolox#misc#msg#debug("vim-misc %s: Found permissions of %s: %s.", g:xolox#misc#version, pathname, permissions_string)
-        return permissions_string
+      let tokens = split(result['stdout'][0], ':')
+      if len(tokens) == 3
+        let [owner, group, mode] = tokens
+        let mode = '0' . mode
+        call xolox#misc#msg#debug("vim-misc %s: File %s has owner %s, group %s, mode %s.", g:xolox#misc#version, pathname, owner, group, mode)
+        return [owner, group, mode]
       endif
     endif
   endif
-  return ''
+  return []
 endfunction
 
 function! xolox#misc#perm#set(fname, perms)
   " Set the permissions (the second argument) of the pathname given as the
-  " first argument. Expects a permissions string created by
+  " first argument. Expects a permissions value created by
   " `xolox#misc#perm#get()`.
   if !empty(a:perms)
     let pathname = xolox#misc#path#absolute(a:fname)
-    let command = printf('chmod %s %s', shellescape(a:perms), shellescape(pathname))
-    let result = xolox#misc#os#exec({'command': command})
-    if result['exit_code'] == 0
-      call xolox#misc#msg#debug("vim-misc %s: Successfully set permissions of %s to %s.", g:xolox#misc#version, pathname, a:perms)
+    let [owner, group, mode] = a:perms
+    if s:run('chown %s:%s %s', owner, group, pathname) && s:run('chmod %s %s', mode, pathname)
+      call xolox#misc#msg#debug("vim-misc %s: Successfully set %s owner to %s, group to %s and permissions to %s.", g:xolox#misc#version, pathname, owner, group, mode)
       return 1
     endif
   endif
   return 0
+endfunction
+
+function! s:run(command, ...)
+  let args = map(copy(a:000), 'shellescape(v:val)')
+  call insert(args, a:command, 0)
+  let result = xolox#misc#os#exec({'command': call('printf', args)})
+  return result['exit_code'] == 0
 endfunction

@@ -1,7 +1,7 @@
 " Persist/recall Vim values from/to files.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 22, 2014
+" Last Change: June 30, 2014
 " URL: http://peterodding.com/code/vim/misc/
 "
 " Vim's [string()][] function can be used to serialize Vim script values like
@@ -44,10 +44,7 @@ function! xolox#misc#persist#save(filename, value) " {{{1
   "
   " [string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
   " [writefile()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#writefile()
-  let intermediate_file = printf('%s.tmp', a:filename)
-  let lines = split(string(a:value), "\n")
-  call writefile(lines, intermediate_file)
-  call rename(intermediate_file, a:filename)
+  return xolox#misc#perm#update(a:filename, split(string(a:value), "\n"))
 endfunction
 
 " vim: ts=2 sw=2 et

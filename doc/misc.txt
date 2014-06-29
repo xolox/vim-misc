@@ -65,8 +65,9 @@ Contents ~
    11. The |xolox#misc#path#is_relative()| function
    12. The |xolox#misc#path#tempdir()| function
   13. Manipulation of UNIX file permissions |misc-manipulation-of-unix-file-permissions|
-   1. The |xolox#misc#perm#get()| function
-   2. The |xolox#misc#perm#set()| function
+   1. The |xolox#misc#perm#update()| function
+   2. The |xolox#misc#perm#get()| function
+   3. The |xolox#misc#perm#set()| function
   14. Persist/recall Vim values from/to files |misc-persist-recall-vim-values-from-to-files|
    1. The |xolox#misc#persist#load()| function
    2. The |xolox#misc#persist#save()| function
@@ -165,8 +166,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 91 functions below was extracted from 19 Vim scripts
-on June 29, 2014 at 23:33.
+The documentation of the 92 functions below was extracted from 19 Vim scripts
+on June 30, 2014 at 00:19.
 
 -------------------------------------------------------------------------------
                                       *misc-asynchronous-vim-script-evaluation*
@@ -797,16 +798,26 @@ file is written the file becomes owned by root (my effective user id in the
 file because it's now owned by root … ಠ_ಠ
 
 -------------------------------------------------------------------------------
+The *xolox#misc#perm#update()* function
+
+Atomically update a file's contents while preserving the owner, group and mode.
+The first argument is the pathname of the file to update (a string). The second
+argument is the list of lines to be written to the file. Writes the new
+contents to a temporary file and renames the temporary file into place, thereby
+preventing readers from reading a partially written file.
+
+-------------------------------------------------------------------------------
 The *xolox#misc#perm#get()* function
 
-Get the permissions of the pathname given as the first argument. Returns a
-string which you can later pass to |xolox#misc#perm#set()|.
+Get the owner, group and permissions of the pathname given as the first
+argument. Returns an opaque value which you can later pass to
+|xolox#misc#perm#set()|.
 
 -------------------------------------------------------------------------------
 The *xolox#misc#perm#set()* function
 
 Set the permissions (the second argument) of the pathname given as the first
-argument. Expects a permissions string created by |xolox#misc#perm#get()|.
+argument. Expects a permissions value created by |xolox#misc#perm#get()|.
 
 -------------------------------------------------------------------------------
                                  *misc-persist-recall-vim-values-from-to-files*

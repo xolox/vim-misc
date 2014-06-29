@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 91 functions below was extracted from
-19 Vim scripts on June 29, 2014 at 23:33.
+The documentation of the 92 functions below was extracted from
+19 Vim scripts on June 30, 2014 at 00:19.
 
 ### Asynchronous Vim script evaluation
 
@@ -658,15 +658,24 @@ my tags file because it's now owned by root … ಠ_ಠ
 [vim-easytags]: http://peterodding.com/code/vim/easytags/
 [writefile()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#writefile()
 
+#### The `xolox#misc#perm#update()` function
+
+Atomically update a file's contents while preserving the owner, group and
+mode. The first argument is the pathname of the file to update (a string).
+The second argument is the list of lines to be written to the file. Writes
+the new contents to a temporary file and renames the temporary file into
+place, thereby preventing readers from reading a partially written file.
+
 #### The `xolox#misc#perm#get()` function
 
-Get the permissions of the pathname given as the first argument. Returns a
-string which you can later pass to `xolox#misc#perm#set()`.
+Get the owner, group and permissions of the pathname given as the first
+argument. Returns an opaque value which you can later pass to
+`xolox#misc#perm#set()`.
 
 #### The `xolox#misc#perm#set()` function
 
 Set the permissions (the second argument) of the pathname given as the
-first argument. Expects a permissions string created by
+first argument. Expects a permissions value created by
 `xolox#misc#perm#get()`.
 
 ### Persist/recall Vim values from/to files
