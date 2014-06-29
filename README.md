@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 89 functions below was extracted from
-18 Vim scripts on June 22, 2014 at 02:54.
+The documentation of the 91 functions below was extracted from
+19 Vim scripts on June 29, 2014 at 23:33.
 
 ### Asynchronous Vim script evaluation
 
@@ -633,6 +633,41 @@ relative, false (0) otherwise.
 #### The `xolox#misc#path#tempdir()` function
 
 Create a temporary directory and return the pathname of the directory.
+
+### Manipulation of UNIX file permissions
+
+Vim's [writefile()][] function cannot set file permissions for newly created
+files and although Vim script has a function to get file permissions (see
+[getfperm()][]) there is no equivalent for changing a file's permissions.
+
+This omission breaks the otherwise very useful idiom of updating a file by
+writing its new contents to a temporary file and then renaming the temporary
+file into place (which is as close as you're going to get to atomically
+updating a file's contents on UNIX) because the file's permissions will not
+be preserved!
+
+**Here's a practical example:** My [vim-easytags][] plug-in writes tags file
+updates to a temporary file and renames the temporary file into place. When
+I use `sudo -s` on Ubuntu Linux it preserves my environment variables so my
+`~/.vimrc` and the [vim-easytags][] plug-in are still loaded. Now when a
+tags file is written the file becomes owned by root (my effective user id in
+the `sudo` session). Once I leave the `sudo` session I can no longer update
+my tags file because it's now owned by root … ಠ_ಠ
+
+[getfperm()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#getfperm()
+[vim-easytags]: http://peterodding.com/code/vim/easytags/
+[writefile()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#writefile()
+
+#### The `xolox#misc#perm#get()` function
+
+Get the permissions of the pathname given as the first argument. Returns a
+string which you can later pass to `xolox#misc#perm#set()`.
+
+#### The `xolox#misc#perm#set()` function
+
+Set the permissions (the second argument) of the pathname given as the
+first argument. Expects a permissions string created by
+`xolox#misc#perm#get()`.
 
 ### Persist/recall Vim values from/to files
 

@@ -64,17 +64,20 @@ Contents ~
    10. The |xolox#misc#path#decode()| function
    11. The |xolox#misc#path#is_relative()| function
    12. The |xolox#misc#path#tempdir()| function
-  13. Persist/recall Vim values from/to files |misc-persist-recall-vim-values-from-to-files|
+  13. Manipulation of UNIX file permissions |misc-manipulation-of-unix-file-permissions|
+   1. The |xolox#misc#perm#get()| function
+   2. The |xolox#misc#perm#set()| function
+  14. Persist/recall Vim values from/to files |misc-persist-recall-vim-values-from-to-files|
    1. The |xolox#misc#persist#load()| function
    2. The |xolox#misc#persist#save()| function
-  14. String handling                                    |misc-string-handling|
+  15. String handling                                    |misc-string-handling|
    1. The |xolox#misc#str#slug()| function
    2. The |xolox#misc#str#ucfirst()| function
    3. The |xolox#misc#str#compact()| function
    4. The |xolox#misc#str#trim()| function
    5. The |xolox#misc#str#indent()| function
    6. The |xolox#misc#str#dedent()| function
-  15. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
+  16. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
    1. The |xolox#misc#test#reset()| function
    2. The |xolox#misc#test#summarize()| function
    3. The |xolox#misc#test#wrap()| function
@@ -83,7 +86,7 @@ Contents ~
    6. The |xolox#misc#test#assert_true()| function
    7. The |xolox#misc#test#assert_equals()| function
    8. The |xolox#misc#test#assert_same_type()| function
-  16. Tests for the miscellaneous Vim scripts |tests-for-miscellaneous-vim-scripts|
+  17. Tests for the miscellaneous Vim scripts |tests-for-miscellaneous-vim-scripts|
    1. The |xolox#misc#tests#run()| function
    2. The |xolox#misc#tests#pattern_escaping()| function
    3. The |xolox#misc#tests#substitute_escaping()| function
@@ -107,12 +110,12 @@ function
    19. The |xolox#misc#tests#multiline_string_dedent()| function
    20. The |xolox#misc#tests#version_string_parsing()| function
    21. The |xolox#misc#tests#version_string_comparison()| function
-  17. Timing of long during operations  |misc-timing-of-long-during-operations|
+  18. Timing of long during operations  |misc-timing-of-long-during-operations|
    1. The |xolox#misc#timer#start()| function
    2. The |xolox#misc#timer#stop()| function
    3. The |xolox#misc#timer#force()| function
    4. The |xolox#misc#timer#convert()| function
-  18. Version string handling                    |misc-version-string-handling|
+  19. Version string handling                    |misc-version-string-handling|
    1. The |xolox#misc#version#parse()| function
    2. The |xolox#misc#version#at_least()| function
  4. Contact                                                      |misc-contact|
@@ -162,8 +165,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 89 functions below was extracted from 18 Vim scripts
-on June 22, 2014 at 02:54.
+The documentation of the 91 functions below was extracted from 19 Vim scripts
+on June 29, 2014 at 23:33.
 
 -------------------------------------------------------------------------------
                                       *misc-asynchronous-vim-script-evaluation*
@@ -772,6 +775,40 @@ The *xolox#misc#path#tempdir()* function
 Create a temporary directory and return the pathname of the directory.
 
 -------------------------------------------------------------------------------
+                                   *misc-manipulation-of-unix-file-permissions*
+Manipulation of UNIX file permissions ~
+
+Vim's |writefile()| function cannot set file permissions for newly created
+files and although Vim script has a function to get file permissions (see
+|getfperm()|) there is no equivalent for changing a file's permissions.
+
+This omission breaks the otherwise very useful idiom of updating a file by
+writing its new contents to a temporary file and then renaming the temporary
+file into place (which is as close as you're going to get to atomically
+updating a file's contents on UNIX) because the file's permissions will not be
+preserved!
+
+**Here's a practical example:** My vim-easytags [6] plug-in writes tags file
+updates to a temporary file and renames the temporary file into place. When I
+use 'sudo -s' on Ubuntu Linux it preserves my environment variables so my
+'~/.vimrc' and the vim-easytags [6] plug-in are still loaded. Now when a tags
+file is written the file becomes owned by root (my effective user id in the
+'sudo' session). Once I leave the 'sudo' session I can no longer update my tags
+file because it's now owned by root … ಠ_ಠ
+
+-------------------------------------------------------------------------------
+The *xolox#misc#perm#get()* function
+
+Get the permissions of the pathname given as the first argument. Returns a
+string which you can later pass to |xolox#misc#perm#set()|.
+
+-------------------------------------------------------------------------------
+The *xolox#misc#perm#set()* function
+
+Set the permissions (the second argument) of the pathname given as the first
+argument. Expects a permissions string created by |xolox#misc#perm#get()|.
+
+-------------------------------------------------------------------------------
                                  *misc-persist-recall-vim-values-from-to-files*
 Persist/recall Vim values from/to files ~
 
@@ -1084,7 +1121,7 @@ Online [15].
                                                                  *misc-license*
 License ~
 
-This software is licensed under the MIT license [16]. ÂŠ 2014 Peter Odding
+This software is licensed under the MIT license [16]. © 2014 Peter Odding
 <peter@peterodding.com>.
 
 ===============================================================================
