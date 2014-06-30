@@ -1,7 +1,7 @@
 " Asynchronous Vim script evaluation.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 22, 2014
+" Last Change: June 30, 2014
 " URL: http://peterodding.com/code/vim/misc/
 "
 " The `xolox#misc#async#call()` function builds on top of `xolox#misc#os#exec()`
@@ -144,6 +144,7 @@ function! xolox#misc#async#call(options) " {{{1
   let g:xolox#misc#async#counter += 1
   let request = {'function': a:options['function']}
   let request['arguments'] = get(a:options, 'arguments', [])
+  let request['starttime'] = xolox#misc#timer#start()
   let request['number'] = unique_number
   let callback = get(a:options, 'callback')
   if !empty(callback)
@@ -211,8 +212,8 @@ function! xolox#misc#async#callback_to_parent(response) " {{{1
   " enables more or less instant callbacks after running an asynchronous
   " function.
   let unique_number = a:response['number']
-  call xolox#misc#msg#debug("vim-misc %s: Processing asynchronous callback #%i ..", g:xolox#easytags#version, unique_number)
   let request = g:xolox#misc#async#requests[unique_number]
+  call xolox#misc#timer#stop("vim-misc %s: Processing asynchronous callback #%i after %s ..", g:xolox#easytags#version, unique_number, request['starttime'])
   call remove(g:xolox#misc#async#requests, unique_number)
   let callback = get(request, 'callback')
   if !empty(callback)
