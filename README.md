@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 92 functions below was extracted from
-19 Vim scripts on June 30, 2014 at 02:47.
+The documentation of the 93 functions below was extracted from
+19 Vim scripts on July  6, 2014 at 18:28.
 
 ### Asynchronous Vim script evaluation
 
@@ -615,6 +615,13 @@ Join a directory pathname and filename into a single pathname.
 #### The `xolox#misc#path#commonprefix()` function
 
 Find the common prefix of path components in a list of pathnames.
+
+#### The `xolox#misc#path#starts_with()` function
+
+Check whether the first pathname starts with the second pathname (expected
+to be a directory). This does not perform a regular string comparison;
+first it normalizes both pathnames, then it splits them into their
+pathname segments and then it compares the segments.
 
 #### The `xolox#misc#path#encode()` function
 

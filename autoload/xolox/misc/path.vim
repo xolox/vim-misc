@@ -1,7 +1,7 @@
 " Pathname manipulation functions.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 25, 2013
+" Last Change: July 6, 2014
 " URL: http://peterodding.com/code/vim/misc/
 
 let s:windows_compatible = xolox#misc#os#is_win()
@@ -154,7 +154,6 @@ function! xolox#misc#path#relative(path, base) " {{{1
   return xolox#misc#path#join(distance + path)
 endfunction
 
-
 function! xolox#misc#path#merge(parent, child, ...) " {{{1
   " Join a directory pathname and filename into a single pathname.
   if type(a:parent) == type('') && type(a:child) == type('')
@@ -190,6 +189,16 @@ function! xolox#misc#path#commonprefix(paths) " {{{1
   return xolox#misc#path#join(common)
 endfunction
 
+function! xolox#misc#path#starts_with(a, b) " {{{1
+  " Check whether the first pathname starts with the second pathname (expected
+  " to be a directory). This does not perform a regular string comparison;
+  " first it normalizes both pathnames, then it splits them into their
+  " pathname segments and then it compares the segments.
+  let a = xolox#misc#path#split(xolox#misc#path#absolute(a:a))
+  let b = xolox#misc#path#split(xolox#misc#path#absolute(a:b))
+  return a[0 : len(b) - 1] == b
+endfunction
+
 function! xolox#misc#path#encode(path) " {{{1
   " Encode a pathname so it can be used as a filename. This uses URL encoding
   " to encode special characters.
@@ -202,7 +211,6 @@ function! xolox#misc#path#encode(path) " {{{1
   endif
   return substitute(a:path, mask, '\=printf("%%%x", char2nr(submatch(0)))', 'g')
 endfunction
-
 
 function! xolox#misc#path#decode(encoded_path) " {{{1
   " Decode a pathname previously encoded with `xolox#misc#path#encode()`.
