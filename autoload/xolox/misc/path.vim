@@ -1,7 +1,7 @@
 " Pathname manipulation functions.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: July 6, 2014
+" Last Change: July 7, 2014
 " URL: http://peterodding.com/code/vim/misc/
 
 let s:windows_compatible = xolox#misc#os#is_win()
@@ -72,8 +72,12 @@ function! xolox#misc#path#split(path) " {{{1
         " UNC pathname.
         return split(a:path, '\%>2c[\/]\+')
       else
-        " If it's not a UNC path we can simply split on slashes & backslashes.
-        return split(a:path, '[\/]\+')
+        " If it's not a UNC pathname we can simply split on slashes and
+        " backslashes, although we should preserve a leading slash (which
+        " denotes a pathname that is 'absolute to the current drive').
+        let absolute = (a:path =~ '^[\/]')
+        let segments = split(a:path, '[\/]\+')
+        return absolute ? insert(segments, a:path[0]) : segments
       endif
     else
       " Everything else is treated as UNIX.
@@ -135,6 +139,10 @@ function! xolox#misc#path#absolute(path) " {{{1
       " Also normalize the two leading "directory separators" (I'm not
       " sure what else to call them :-) in Windows UNC pathnames.
       let parts[0] = repeat(xolox#misc#path#directory_separator(), 2) . parts[0][2:]
+    elseif s:windows_compatible && parts[0] =~ '^[\/]$'
+      " If a pathname is relative to the current drive we should add
+      " the drive letter in order to make the pathname absolute.
+      let parts[0] = matchstr(getcwd(), '^\a:')
     endif
     return xolox#misc#path#join(parts)
   endif
