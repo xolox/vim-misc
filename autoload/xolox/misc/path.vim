@@ -72,8 +72,10 @@ function! xolox#misc#path#split(path) " {{{1
         " UNC pathname.
         return split(a:path, '\%>2c[\/]\+')
       else
+        let absolute = (a:path =~ '^[\/]')
         " If it's not a UNC path we can simply split on slashes & backslashes.
-        return split(a:path, '[\/]\+')
+        let segments = split(a:path, '[\/]\+')
+        return absolute ? insert(segments, a:path[0]) : segments
       endif
     else
       " Everything else is treated as UNIX.
@@ -135,6 +137,8 @@ function! xolox#misc#path#absolute(path) " {{{1
       " Also normalize the two leading "directory separators" (I'm not
       " sure what else to call them :-) in Windows UNC pathnames.
       let parts[0] = repeat(xolox#misc#path#directory_separator(), 2) . parts[0][2:]
+    elseif s:windows_compatible && parts[0] =~ '^[\/]$'
+      let parts[0] = matchstr(getcwd(), '^\a:')
     endif
     return xolox#misc#path#join(parts)
   endif
