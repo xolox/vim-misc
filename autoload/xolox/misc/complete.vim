@@ -1,7 +1,7 @@
 " Tab completion for user defined commands.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: May 19, 2013
+" Last Change: July 9, 2014
 " URL: http://peterodding.com/code/vim/misc/
 
 function! xolox#misc#complete#keywords(arglead, cmdline, cursorpos)
@@ -16,7 +16,11 @@ function! xolox#misc#complete#keywords(arglead, cmdline, cursorpos)
       let words[word] = 1
     endfor
   endfor
-  return sort(keys(filter(words, 'v:key =~# a:arglead')))
+  let arguments = [keys(filter(words, 'v:key =~# a:arglead'))]
+  if &ignorecase
+    call add(arguments, 1)
+  endif
+  return call('sort', arguments)
 endfunction
 
 " vim: ts=2 sw=2 et
