@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 93 functions below was extracted from
-19 Vim scripts on July 19, 2014 at 12:32.
+The documentation of the 94 functions below was extracted from
+19 Vim scripts on July 19, 2014 at 13:11.
 
 ### Asynchronous Vim script evaluation
 
@@ -910,6 +910,33 @@ Test parsing of version strings with `xolox#misc#version#parse()`.
 Test comparison of version strings with `xolox#misc#version#at_least()`.
 
 ### Timing of long during operations
+
+#### The `xolox#misc#timer#resumable()` function
+
+Create a resumable timer object. This returns an object (a dictionary with
+functions) with the following "methods":
+
+ - `start()` instructs the timer object to start counting elapsed time
+   (when a timer object is created it is not automatically started).
+
+ - `stop()` instructs the timer object to stop counting elapsed time.
+   This adds the time elapsed since `start()` was last called to the
+   total elapsed time. This method will raise an error if called out of
+   sequence.
+
+ - `format()` takes the total elapsed time and reports it as a string
+   containing a formatted floating point number.
+
+Timer objects are meant to accurately time short running operations so
+they're dependent on Vim's [reltime()][] and [reltimestr()][] functions.
+In order to make it possible to use timer objects in my Vim plug-ins
+unconditionally there's a fall back to [localtime()][] when [reltime()][]
+is not available. In this mode the timer objects are not very useful but
+at least they shouldn't raise errors.
+
+[localtime()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#localtime()
+[reltime()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#reltime()
+[reltimestr()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#reltimestr()
 
 #### The `xolox#misc#timer#start()` function
 
