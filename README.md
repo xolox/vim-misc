@@ -38,7 +38,7 @@ from the source code of the miscellaneous scripts using the Python module
 <!-- Start of generated documentation -->
 
 The documentation of the 94 functions below was extracted from
-19 Vim scripts on July 19, 2014 at 13:11.
+19 Vim scripts on September 14, 2014 at 10:51.
 
 ### Asynchronous Vim script evaluation
 

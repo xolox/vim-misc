@@ -5,7 +5,6 @@
 " URL: http://peterodding.com/code/vim/misc/
 
 let s:windows_compatible = xolox#misc#os#is_win()
-let s:mac_os_x_compatible = xolox#misc#os#is_mac()
 
 function! xolox#misc#path#which(...) " {{{1
   " Scan the executable search path (`$PATH`) for one or more external
@@ -212,7 +211,7 @@ function! xolox#misc#path#encode(path) " {{{1
   " to encode special characters.
   if s:windows_compatible
     let mask = '[*|\\/:"<>?%]'
-  elseif s:mac_os_x_compatible
+  elseif xolox#misc#os#is_mac()
     let mask = '[\\/%:]'
   else
     let mask = '[\\/%]'
