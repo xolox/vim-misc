@@ -75,10 +75,11 @@ Contents ~
   15. String handling                                    |misc-string-handling|
    1. The |xolox#misc#str#slug()| function
    2. The |xolox#misc#str#ucfirst()| function
-   3. The |xolox#misc#str#compact()| function
-   4. The |xolox#misc#str#trim()| function
-   5. The |xolox#misc#str#indent()| function
-   6. The |xolox#misc#str#dedent()| function
+   3. The |xolox#misc#str#unescape()| function
+   4. The |xolox#misc#str#compact()| function
+   5. The |xolox#misc#str#trim()| function
+   6. The |xolox#misc#str#indent()| function
+   7. The |xolox#misc#str#dedent()| function
   16. Test runner & infrastructure for Vim plug-ins |misc-test-runner-infrastructure-for-vim-plug-ins|
    1. The |xolox#misc#test#reset()| function
    2. The |xolox#misc#test#summarize()| function
@@ -168,8 +169,8 @@ For those who are curious: The function descriptions given below were extracted
 from the source code of the miscellaneous scripts using the Python module
 'vimdoctool.py' included in vim-tools [5].
 
-The documentation of the 94 functions below was extracted from 19 Vim scripts
-on September 14, 2014 at 10:51.
+The documentation of the 95 functions below was extracted from 19 Vim scripts
+on September 17, 2014 at 22:36.
 
 -------------------------------------------------------------------------------
                                       *misc-asynchronous-vim-script-evaluation*
@@ -883,6 +884,11 @@ and URLs without worrying about quoting/escaping of special characters.
 The *xolox#misc#str#ucfirst()* function
 
 Uppercase the first character in a string (the first argument).
+
+-------------------------------------------------------------------------------
+The *xolox#misc#str#unescape()* function
+
+Remove back slash escapes from a string (the first argument).
 
 -------------------------------------------------------------------------------
 The *xolox#misc#str#compact()* function

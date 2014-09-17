@@ -1,7 +1,7 @@
 " String handling.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 23, 2013
+" Last Change: September 17, 2014
 " URL: http://peterodding.com/code/vim/misc/
 
 function! xolox#misc#str#slug(s) " {{{1
@@ -14,6 +14,11 @@ endfunction
 function! xolox#misc#str#ucfirst(s) " {{{1
   " Uppercase the first character in a string (the first argument).
   return substitute(a:s, '^.', '\U\0', '')
+endfunction
+
+function! xolox#misc#str#unescape(s) " {{{1
+  " Remove back slash escapes from a string (the first argument).
+  return substitute(a:s, '\\\(\_.\)', '\1', 'g')
 endfunction
 
 function! xolox#misc#str#compact(s) " {{{1
