@@ -161,7 +161,7 @@ function! xolox#misc#async#call(options) " {{{1
   let quoted_program = xolox#misc#escape#shell(xolox#misc#os#find_vim('vim'))
   let quoted_command = xolox#misc#escape#shell(vim_command)
   let shell_command = printf('%s -u NONE -U NONE --noplugin -n -N -i NONE --cmd %s', quoted_program, quoted_command)
-  call xolox#misc#msg#debug("vim-misc %s: Generated asynchronous shell command #%i: %s", g:xolox#easytags#version, unique_number, shell_command)
+  call xolox#misc#msg#debug("vim-misc %s: Generated asynchronous shell command #%i: %s", g:xolox#misc#version, unique_number, shell_command)
   call xolox#misc#os#exec({'command': shell_command, 'async': 1})
   let g:xolox#misc#async#requests[unique_number] = request
 endfunction
