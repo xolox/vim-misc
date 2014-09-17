@@ -1,7 +1,7 @@
 " Asynchronous Vim script evaluation.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 30, 2014
+" Last Change: September 17, 2014
 " URL: http://peterodding.com/code/vim/misc/
 "
 " The `xolox#misc#async#call()` function builds on top of `xolox#misc#os#exec()`
@@ -161,7 +161,7 @@ function! xolox#misc#async#call(options) " {{{1
   let quoted_program = xolox#misc#escape#shell(xolox#misc#os#find_vim('vim'))
   let quoted_command = xolox#misc#escape#shell(vim_command)
   let shell_command = printf('%s -u NONE -U NONE --noplugin -n -N -i NONE --cmd %s', quoted_program, quoted_command)
-  call xolox#misc#msg#debug("vim-misc %s: Generated asynchronous shell command #%i: %s", g:xolox#easytags#version, unique_number, shell_command)
+  call xolox#misc#msg#debug("vim-misc %s: Generated asynchronous shell command #%i: %s", g:xolox#misc#version, unique_number, shell_command)
   call xolox#misc#os#exec({'command': shell_command, 'async': 1})
   let g:xolox#misc#async#requests[unique_number] = request
 endfunction
@@ -213,7 +213,7 @@ function! xolox#misc#async#callback_to_parent(response) " {{{1
   " function.
   let unique_number = a:response['number']
   let request = g:xolox#misc#async#requests[unique_number]
-  call xolox#misc#timer#stop("vim-misc %s: Processing asynchronous callback #%i after %s ..", g:xolox#easytags#version, unique_number, request['starttime'])
+  call xolox#misc#timer#stop("vim-misc %s: Processing asynchronous callback #%i after %s ..", g:xolox#misc#version, unique_number, request['starttime'])
   call remove(g:xolox#misc#async#requests, unique_number)
   let callback = get(request, 'callback')
   if !empty(callback)
