@@ -5,7 +5,7 @@
 " URL: http://peterodding.com/code/vim/misc/
 
 let s:enoimpl = "vim-misc %s: %s() hasn't been implemented for your platform! If you have suggestions, please get in touch at https://github.com/xolox/vim-misc/issues"
-let s:handlers = ['gnome-open', 'kde-open', 'exo-open', 'xdg-open']
+let s:handlers = ['gnome-open', 'kde-open', 'exo-open', 'xdg-open', 'cygstart']
 
 function! xolox#misc#open#file(location, ...) " {{{1
   " Given a pathname or URL as the first argument, this opens the file with
