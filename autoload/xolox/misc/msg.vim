@@ -25,7 +25,7 @@ function! xolox#misc#msg#info(...) " {{{1
   "
   " [printf()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
   " [string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
-  call s:show_message('title', a:000)
+  call s:show_message('None', a:000)
 endfunction
 
 function! xolox#misc#msg#warn(...) " {{{1
@@ -33,7 +33,7 @@ function! xolox#misc#msg#warn(...) " {{{1
   "
   " This function has the same argument handling as the
   " `xolox#misc#msg#info()` function.
-  call s:show_message('warningmsg', a:000)
+  call s:show_message('WarningMsg', a:000)
 endfunction
 
 function! xolox#misc#msg#debug(...) " {{{1
@@ -50,7 +50,7 @@ function! xolox#misc#msg#debug(...) " {{{1
   "
   " ['verbose']: http://vimdoc.sourceforge.net/htmldoc/options.html#'verbose'
   if &vbs >= 1
-    call s:show_message('question', a:000)
+    call s:show_message('Question', a:000)
   endif
 endfunction
 
