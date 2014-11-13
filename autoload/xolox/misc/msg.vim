@@ -1,7 +1,7 @@
 " Functions to interact with the user.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 2, 2013
+" Last Change: November 13, 2014
 " URL: http://peterodding.com/code/vim/misc/
 
 if !exists('g:xolox_message_buffer')
@@ -77,8 +77,9 @@ function! s:show_message(hlgroup, args) " {{{1
         autocmd! CursorHold,CursorHoldI * call s:clear_message()
       augroup END
       execute 'echohl' a:hlgroup
-      " Redraw to avoid |hit-enter| prompt.
-      redraw
+      " Redraw to avoid the |hit-enter| prompt. We use :silent to avoid issues
+      " like this one: https://github.com/xolox/vim-easytags/issues/69.
+      silent! redraw
       for line in split(message, "\n")
         echomsg line
       endfor
