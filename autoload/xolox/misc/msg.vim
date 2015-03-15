@@ -1,7 +1,7 @@
 " Functions to interact with the user.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: November 13, 2014
+" Last Change: March 15, 2015
 " URL: http://peterodding.com/code/vim/misc/
 
 if !exists('g:xolox_message_buffer')
@@ -23,9 +23,18 @@ function! xolox#misc#msg#info(...) " {{{1
   " In the case of `xolox#misc#msg#info()`, automatic string coercion simply
   " makes the function a bit easier to use.
   "
+  " The messages emitted by this function have no highlighting. Previously
+  " these messages were highlighted using the [Title group] [hl-title], but it
+  " was pointed out in [pull request 16] [pr-16] that this group shouldn't be
+  " used for informational messages because it is meant for titles and because
+  " of this some color schemes use colors that stand out quite a bit, causing
+  " the informational messages to look like errors.
+  "
+  " [hl-title]: http://vimdoc.sourceforge.net/htmldoc/syntax.html#hl-Title
+  " [pr-16]: https://github.com/xolox/vim-misc/pull/16
   " [printf()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
   " [string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
-  call s:show_message('title', a:000)
+  call s:show_message('None', a:000)
 endfunction
 
 function! xolox#misc#msg#warn(...) " {{{1
@@ -33,7 +42,7 @@ function! xolox#misc#msg#warn(...) " {{{1
   "
   " This function has the same argument handling as the
   " `xolox#misc#msg#info()` function.
-  call s:show_message('warningmsg', a:000)
+  call s:show_message('WarningMsg', a:000)
 endfunction
 
 function! xolox#misc#msg#debug(...) " {{{1
@@ -50,7 +59,7 @@ function! xolox#misc#msg#debug(...) " {{{1
   "
   " ['verbose']: http://vimdoc.sourceforge.net/htmldoc/options.html#'verbose'
   if &vbs >= 1
-    call s:show_message('question', a:000)
+    call s:show_message('Question', a:000)
   endif
 endfunction
 

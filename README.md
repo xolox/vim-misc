@@ -38,7 +38,7 @@ from the source code of the miscellaneous scripts using the Python module
 <!-- Start of generated documentation -->
 
 The documentation of the 95 functions below was extracted from
-19 Vim scripts on November 13, 2014 at 23:19.
+19 Vim scripts on March 15, 2015 at 11:10.
 
 ### Asynchronous Vim script evaluation
 
@@ -378,6 +378,15 @@ or strings are coerced to strings using Vim's [string()] [] function.
 In the case of `xolox#misc#msg#info()`, automatic string coercion simply
 makes the function a bit easier to use.
 
+The messages emitted by this function have no highlighting. Previously
+these messages were highlighted using the [Title group] [hl-title], but it
+was pointed out in [pull request 16] [pr-16] that this group shouldn't be
+used for informational messages because it is meant for titles and because
+of this some color schemes use colors that stand out quite a bit, causing
+the informational messages to look like errors.
+
+[hl-title]: http://vimdoc.sourceforge.net/htmldoc/syntax.html#hl-Title
+[pr-16]: https://github.com/xolox/vim-misc/pull/16
 [printf()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
 [string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
 
@@ -999,8 +1008,8 @@ the plug-in's [homepage] []. If you like the script please vote for it on
 
 ## License
 
-This software is licensed under the [MIT license] [].  
-© 2014 Peter Odding &lt;<peter@peterodding.com>&gt;.
+This software is licensed under the [MIT license] [].
+© 2015 Peter Odding &lt;<peter@peterodding.com>&gt;.
 
 
 [GitHub]: http://github.com/xolox/vim-misc
