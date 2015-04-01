@@ -1,7 +1,7 @@
 " Vim and plug-in option handling.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June 2, 2013
+" Last Change: April 1, 2015
 " URL: http://peterodding.com/code/vim/misc/
 
 function! xolox#misc#option#get(name, ...) " {{{1
@@ -94,7 +94,8 @@ function! xolox#misc#option#eval_tags(value, ...) " {{{1
     " Make buffer relative pathnames absolute.
     if pattern =~ '^\./'
       let suffix = matchstr(pattern, '^./\zs.*$')
-      let pattern = xolox#misc#path#merge(expand('%:p:h'), suffix)
+      let directory = (&cpoptions =~ 'd') ? getcwd() : expand('%:p:h')
+      let pattern = xolox#misc#path#merge(directory, suffix)
     endif
     " Make working directory relative pathnames absolute.
     if xolox#misc#path#is_relative(pattern)
