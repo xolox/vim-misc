@@ -94,7 +94,7 @@ function! xolox#misc#option#eval_tags(value, ...) " {{{1
     " Make buffer relative pathnames absolute.
     if pattern =~ '^\./'
       let suffix = matchstr(pattern, '^./\zs.*$')
-      let directory = (&cpoptions =~ 'd') ? getcwd() : expand('%:p:h')
+      let directory = (&cpoptions =~# 'd') ? getcwd() : expand('%:p:h')
       let pattern = xolox#misc#path#merge(directory, suffix)
     endif
     " Make working directory relative pathnames absolute.

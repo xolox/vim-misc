@@ -4,4 +4,4 @@
 " Last Change: April 1, 2015
 " URL: http://peterodding.com/code/vim/misc/
 
-let g:xolox#misc#version = '1.17.3'
+let g:xolox#misc#version = '1.17.4'
