@@ -16,13 +16,7 @@ the miscellaneous scripts, but I don't see any way around this. Sorry!
 
 ## Installation
 
-Unzip the most recent [ZIP archive] [] file inside your Vim profile
-directory (usually this is `~/.vim` on UNIX and `%USERPROFILE%\vimfiles` on
-Windows), restart Vim and execute the command `:helptags ~/.vim/doc` (use
-`:helptags ~\vimfiles\doc` instead on Windows).
-
-If you prefer you can also use [Pathogen] [], [Vundle] [] or a similar tool to
-install & update the plug-in using a local clone of the git repository.
+Please refer to the [installation instructions] [howto-install] on GitHub.
 
 ## Function documentation
 
@@ -38,7 +32,7 @@ from the source code of the miscellaneous scripts using the Python module
 <!-- Start of generated documentation -->
 
 The documentation of the 95 functions below was extracted from
-19 Vim scripts on March 15, 2015 at 11:10.
+19 Vim scripts on April  1, 2015 at 23:32.
 
 ### Asynchronous Vim script evaluation
 
@@ -1015,10 +1009,7 @@ This software is licensed under the [MIT license] [].
 [GitHub]: http://github.com/xolox/vim-misc
 [homepage]: http://peterodding.com/code/vim/misc
 [MIT license]: http://en.wikipedia.org/wiki/MIT_License
-[Pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
 [plugins]: http://peterodding.com/code/vim/
-[repository]: https://github.com/xolox/vim-misc
 [Vim Online]: http://www.vim.org/scripts/script.php?script_id=4597
 [vim-tools]: http://peterodding.com/code/vim/tools/
-[Vundle]: https://github.com/gmarik/vundle
-[ZIP archive]: http://peterodding.com/code/vim/downloads/misc.zip
+[howto-install]: https://github.com/xolox/vim-misc/blob/master/README.md
