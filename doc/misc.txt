@@ -1186,7 +1186,7 @@ This software is licensed under the MIT license [15]. © 2015 Peter Odding
 References ~
 
 [1] http://peterodding.com/code/vim/
-[2] https://github.com/xolox/vim-misc/blob/master/README.md
+[2] https://github.com/xolox/vim-misc/blob/master/INSTALL.md
 [3] http://peterodding.com/code/vim/tools/
 [4] http://peterodding.com/code/vim/easytags/
 [5] http://peterodding.com/code/vim/misc/

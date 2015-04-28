@@ -1012,4 +1012,4 @@ This software is licensed under the [MIT license] [].
 [plugins]: http://peterodding.com/code/vim/
 [Vim Online]: http://www.vim.org/scripts/script.php?script_id=4597
 [vim-tools]: http://peterodding.com/code/vim/tools/
-[howto-install]: https://github.com/xolox/vim-misc/blob/master/README.md
+[howto-install]: https://github.com/xolox/vim-misc/blob/master/INSTALL.md
