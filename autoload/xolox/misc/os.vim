@@ -1,7 +1,7 @@
 " Operating system interfaces.
 "
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: June , 2013
+" Last Change: May 21, 2015
 " URL: http://peterodding.com/code/vim/misc/
 
 function! xolox#misc#os#is_mac() " {{{1
@@ -158,7 +158,20 @@ function! xolox#misc#os#exec(options) " {{{1
       " Enable asynchronous mode (very platform specific).
       if async
         if is_win
-          let cmd = printf('start /b %s', cmd)
+          " As pointed out in issue 17 [1] the use of `:!start' on Windows
+          " requires characters like `!', `%' and `#' to be escaped with a
+          " backslash [2]. Vim's shellescape() function knows how to escape
+          " these special characters however the use of `:!start' is an
+          " implementation detail of xolox#misc#os#exec() so I don't want to
+          " bother callers (who perform the shell escaping) with such a
+          " specific implementation detail. This is why I resort to manually
+          " escaping characters documented to have a special meaning [2].
+          "
+          " [1] https://github.com/xolox/vim-misc/issues/17
+          " [2] All characters interpreted specially in shell command lines
+          "     executed from Vim's command mode, refer to `:help :!' for
+          "     details.
+          let cmd = printf('start /b %s', escape(cmd, "\\\n!%#"))
         elseif has('unix')
           let cmd = printf('(%s) &', cmd)
         else
