@@ -226,15 +226,23 @@ endfunction
 
 " xolox#misc#path#equals(a, b) - Check whether two pathnames point to the same file. {{{1
 
-if s:windows_compatible
-  function! xolox#misc#path#equals(a, b)
+function! xolox#misc#path#equals(a, b)
+  " Set default value for case_insensitive_filesystem based on OS
+  if s:windows_compatible
+    let case_insensitive_filesystem = 1
+  else
+    let case_insensitive_filesystem = 0
+  endif
+  " Set value from g:xolox#misc#case_insensitive_filesystem if it exists
+  if exists('g:xolox#misc#case_insensitive_filesystem')
+    let case_insensitive_filesystem = (g:xolox#misc#case_insensitive_filesystem == 1)? 1 : 0
+  endif
+  if case_insensitive_filesystem == 1
     return a:a ==? a:b || xolox#misc#path#absolute(a:a) ==? xolox#misc#path#absolute(a:b)
-  endfunction
-else
-  function! xolox#misc#path#equals(a, b)
+  else
     return a:a ==# a:b || xolox#misc#path#absolute(a:a) ==# xolox#misc#path#absolute(a:b)
-  endfunction
-endif
+  endif
+endfunction
 
 function! xolox#misc#path#is_relative(path) " {{{1
   " Returns true (1) when the pathname given as the first argument is
