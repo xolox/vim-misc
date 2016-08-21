@@ -226,13 +226,13 @@ endfunction
 
 " xolox#misc#path#equals(a, b) - Check whether two pathnames point to the same file. {{{1
 
-if s:windows_compatible
+if xolox#misc#os#is_fs_case_sensitive()
   function! xolox#misc#path#equals(a, b)
-    return a:a ==? a:b || xolox#misc#path#absolute(a:a) ==? xolox#misc#path#absolute(a:b)
+    return a:a ==# a:b || xolox#misc#path#absolute(a:a) ==# xolox#misc#path#absolute(a:b)
   endfunction
 else
   function! xolox#misc#path#equals(a, b)
-    return a:a ==# a:b || xolox#misc#path#absolute(a:a) ==# xolox#misc#path#absolute(a:b)
+    return a:a ==? a:b || xolox#misc#path#absolute(a:a) ==? xolox#misc#path#absolute(a:b)
   endfunction
 endif
 

@@ -32,6 +32,11 @@ function! xolox#misc#os#is_win() " {{{1
   return has('win16') || has('win32') || has('win64')
 endfunction
 
+function! xolox#misc#os#is_fs_case_sensitive() " {{{1
+  " Returns 1 (true) when the filesystem is case sensitive 
+  return !xolox#misc#os#is_win() && !has('win32unix')
+endfunction
+
 function! xolox#misc#os#find_vim(...) " {{{1
   " Returns the program name of Vim as a string. On Windows and UNIX this just
   " [v:progname] [] as an absolute pathname while on Mac OS X there is
