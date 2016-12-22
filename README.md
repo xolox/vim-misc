@@ -70,7 +70,7 @@ portable and robust as possible.
 much just yet. On the other hand, as I said, my intention is to make this
 functionality as portable and robust as possible. You be the judge :-).
 
-[vim-easytags]: http://peterodding.com/code/vim/easytags/
+[vim-easytags]: https://github.com/xolox/vim-easytags
 
 #### The `xolox#misc#async#call()` function
 
